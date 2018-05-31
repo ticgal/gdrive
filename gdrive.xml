@@ -1,0 +1,46 @@
+         <root>
+            <name>GDrive</name>
+            <key>GDrive</key>
+            <state>stable</state> <!-- stable | unstable | beta | alpha -->
+            <logo>https://github.com/ticgal/GDrive/blob/multimedia/gdrive-40.png</logo>
+            <description>
+               <short>
+                  <en>Google Drive plugin for GLPi</en>
+                  <es>Módulo de Google Drive para GLPi</es>
+               </short>
+               <long>
+                  <en>GDrive allows users of Google Drive adding files to glpi tickets effortlesly.</en>
+                  <es>GDrive permite a los usuarios de Google Drive añadir ficheros fácilmente a sus peticiones.</es>
+               </long>
+            </description>
+            <homepage>https://tic.gal/glpi</homepage>
+            <download>https://github.com/ticgal/GDrive/releases</download>
+            <issues>https://github.com/ticgal/GDrive/issues</issues>
+            <readme>https://github.com/ticgal/GDrive/blob/master/README.md</readme>
+            <authors>
+               <author>TICgal</author>
+            </authors>
+            <versions>
+               <version>
+                  <num>1.0.0</num>
+                  <compatibility>9.2</compatibility>
+               </version>
+            </versions>
+            <langs>
+               <lang>en_GB</lang>
+			   <lang>gl_ES</lang>
+               <lang>es_ES</lang>
+            </langs>
+            <license>AGPL v3+</license>
+            <tags>
+               <en>
+                  <tag>Helpdesk</tag>
+				  <tag>Ticket</tag>
+				  <tag>Google Drive</tag>
+               </en>
+            </tags>
+            <screenshots>
+               <screenshot>https://github.com/ticgal/GDrive/blob/multimedia/GLPi-GDrive-Plugin-Screenshot-2.png</screenshot>
+               <screenshot>https://github.com/ticgal/GDrive/blob/multimedia/GLPi-GDrive-Plugin-Screenshot-3.png</screenshot>
+            </screenshots>
+         </root>
