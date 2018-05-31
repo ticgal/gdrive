@@ -22,8 +22,8 @@
    </authors>
    <versions>
       <version>
-		<num>1.0.0</num>
-		<compatibility>9.2</compatibility>
+	<num>1.0.0</num>
+	<compatibility>9.2</compatibility>
       </version>
    </versions>
    <langs>
@@ -33,16 +33,16 @@
    </langs>
    <license>AGPL v3+</license>
    <tags>
-      <en>
+      	<en>
 		<tag>Helpdesk</tag>
 		<tag>Ticket</tag>
 		<tag>Google Drive</tag>
-      </en>
-	  <es>
+	</en>
+	<es>
 		<tag>CAU</tag>
 		<tag>Peticiones</tag>
 		<tag>Google Drive</tag>
-      </es>
+	</es>
    </tags>
    <screenshots>
       <screenshot>https://github.com/ticgal/GDrive/blob/multimedia/GLPi-GDrive-Plugin-Screenshot-2.png</screenshot>
