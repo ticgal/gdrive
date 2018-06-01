@@ -2,7 +2,7 @@
    <name>GDrive</name>
    <key>GDrive</key>
    <state>stable</state> <!-- stable | unstable | beta | alpha -->
-   <logo>https://github.com/ticgal/GDrive/blob/multimedia/gdrive-40.png</logo>
+   <logo>https://github.com/ticgal/GDrive/raw/multimedia/gdrive-40.png</logo>
    <description>
       <short>
 		<en>Google Drive plugin for GLPi</en>
@@ -45,7 +45,7 @@
 	</es>
    </tags>
    <screenshots>
-      <screenshot>https://github.com/ticgal/GDrive/blob/multimedia/GLPi-GDrive-Plugin-Screenshot-2.png</screenshot>
-      <screenshot>https://github.com/ticgal/GDrive/blob/multimedia/GLPi-GDrive-Plugin-Screenshot-3.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/ticgal/GDrive/multimedia/GLPi-GDrive-Plugin-Screenshot-2.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/ticgal/GDrive/multimedia/GLPi-GDrive-Plugin-Screenshot-3.png</screenshot>
    </screenshots>
 </root>
