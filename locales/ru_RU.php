@@ -33,11 +33,11 @@
  @since     2018
  ---------------------------------------------------------------------- */
 $LANG['gdrive']['title'][1]="Gdrive";
-$LANG['gdrive']['config']['setup']="Gdrive setup";
-$LANG['gdrive']['config']['developer_key']="The Browser API key obtained from the Google API Console";
-$LANG['gdrive']['config']['client_id']="The Client ID obtained from the Google API Console";
-$LANG['gdrive']['config']['app_id']="See 'Project number' under 'IAM & Admin' > 'Settings'";
-$LANG['grive']['error']="Error loading the file";
-$LANG['grive']['load']="Uploaded fil";
-$LANG['grive']['button']="Select file";
-$LANG['grive']['label']="Select file Drive";
+$LANG['gdrive']['config']['setup']="Gdrive настройки";
+$LANG['gdrive']['config']['developer_key']="Ключ API браузера, полученный из Google API";
+$LANG['gdrive']['config']['client_id']="Идентификатор клиента, полученный из Google API";
+$LANG['gdrive']['config']['app_id']="Смотрите 'Номер проекта' в разделе 'IAM & Администратор' > 'Настройки'";
+$LANG['grive']['error']="Ошибка загрузки файла";
+$LANG['grive']['load']="Файл загружен";
+$LANG['grive']['button']="Выбрать файл";
+$LANG['grive']['label']="Выберите файл на диске";
