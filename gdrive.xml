@@ -13,7 +13,7 @@
 		<es>GDrive permite a los usuarios de Google Drive añadir ficheros fácilmente a sus peticiones.</es>
       </long>
    </description>
-   <homepage>https://tic.gal/glpi</homepage>
+   <homepage>https://tic.gal/en/project/gdrive-integration-glpi-google-drive/</homepage>
    <download>https://github.com/ticgal/GDrive/releases</download>
    <issues>https://github.com/ticgal/GDrive/issues</issues>
    <readme>https://github.com/ticgal/GDrive/blob/master/README.md</readme>
