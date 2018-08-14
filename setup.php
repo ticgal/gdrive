@@ -32,7 +32,7 @@
  @link      https://tic.gal
  @since     2018
  ---------------------------------------------------------------------- */
-define ('PLUGIN_GDRIVE_VERSION', '1.0.0');
+define ('PLUGIN_GDRIVE_VERSION', '1.1.0');
 // Minimal GLPI version, inclusive
 define("PLUGIN_GDRIVE_MIN_GLPI", "9.2");
 // Maximum GLPI version, exclusive
