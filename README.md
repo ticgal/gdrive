@@ -10,6 +10,8 @@
 This plugin allows you to download a file from Drive directly to a ticket.
 Check out the wiki for setup instructions: https://github.com/ticgal/GDrive/wiki/GDrive-Setup
 
+Want to contribute with a translation? https://github.com/ticgal/GDrive/edit/master/.github/CONTRIBUTING.md
+
 ## Galego
 Este módulo permite descargar un ficheiro de Google Drive directamente a unha petición. 
 Instrucción de configuración na wiki: https://github.com/ticgal/GDrive/wiki/GDrive-Setup
