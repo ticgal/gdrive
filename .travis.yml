@@ -30,7 +30,6 @@ before_script:
   - if [ -e tools/cliinstall.php ] ; then php tools/cliinstall.php --db=glpitest --user=root --tests ; fi
   - mv ../GDrive plugins/GDrive
   - cd plugins/GDrive
-  - rm composer.lock
   - composer install
 
 script:
