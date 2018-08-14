@@ -32,16 +32,23 @@
  @link      https://tic.gal
  @since     2018
  ---------------------------------------------------------------------- */
+define ('PLUGIN_GDRIVE_VERSION', '1.0.0');
+// Minimal GLPI version, inclusive
+define("PLUGIN_GDRIVE_MIN_GLPI", "9.2");
+// Maximum GLPI version, exclusive
+define("PLUGIN_GDRIVE_MAX_GLPI", "9.4");
+
 function plugin_version_gdrive() {
 	return array('name'       => 'GDrive',
-		'version'        => '1.0.0',
+		'version'        => PLUGIN_GDRIVE_VERSION,
 		'author'         => '<a href="https://tic.gal">TICgal</a>',
 		'homepage'       => 'https://tic.gal',
 		'license'        => 'GPLv3+',
 		'minGlpiVersion' => "9.2",
 		'requirements'   => [
 			'glpi'   => [
-				'min' => '9.2'
+				'min' => PLUGIN_GDRIVE_MIN_GLPI,
+				'max' => PLUGIN_GDRIVE_MAX_GLPI,
 			]
 		]);
 }
@@ -50,12 +57,22 @@ function plugin_version_gdrive() {
  * Check plugin's prerequisites before installation
  */
 function plugin_gdrive_check_prerequisites() {
-	if (version_compare(GLPI_VERSION,'9.2','lt') || version_compare(GLPI_VERSION,'9.3','gt')) {
-		echo __('This plugin requires GLPI >= 9.2 and GLPI < 9.3', 'gdrive');
-		return false;
-	} else {
-		return true;
+	$version = preg_replace('/^((\d+\.?)+).*$/', '$1', GLPI_VERSION);
+	if (version_compare($version,'9.2','<')) {
+		$matchMinGlpiReq = version_compare($version, PLUGIN_GDRIVE_MIN_GLPI, '>=');
+		$matchMaxGlpiReq = version_compare($version, PLUGIN_GDRIVE_MAX_GLPI, '<');
+		if (!$matchMinGlpiReq || !$matchMaxGlpiReq) {
+			echo vsprintf(
+				'This plugin requires GLPI >= %1$s and < %2$s.',
+				[
+					PLUGIN_GDRIVE_MIN_GLPI,
+					PLUGIN_GDRIVE_MAX_GLPI,
+				]
+			);
+			return false;
+		}
 	}
+	return true;
 }
 
 /**
