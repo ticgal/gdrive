@@ -25,10 +25,10 @@ allow_failures:
 before_script:
   - mysql -u root -e 'create database glpitest;'
   - git clone --depth=1 $GLPI_SOURCE -b $GLPI_BRANCH ../glpi && cd ../glpi
-  - mv ../gdrive plugins/gdrive
   - composer install --no-dev
   - if [ -e scripts/cliinstall.php ] ; then php scripts/cliinstall.php --db=glpitest --user=root --tests ; fi
   - if [ -e tools/cliinstall.php ] ; then php tools/cliinstall.php --db=glpitest --user=root --tests ; fi
+  - mv ../gdrive plugins/gdrive
   - cd plugins/gdrive
   - rm composer.lock
   - composer install
