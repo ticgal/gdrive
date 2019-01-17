@@ -36,7 +36,7 @@ define ('PLUGIN_GDRIVE_VERSION', '1.1.0');
 // Minimal GLPI version, inclusive
 define("PLUGIN_GDRIVE_MIN_GLPI", "9.2");
 // Maximum GLPI version, exclusive
-define("PLUGIN_GDRIVE_MAX_GLPI", "9.4");
+define("PLUGIN_GDRIVE_MAX_GLPI", "9.5");
 
 function plugin_version_gdrive() {
 	return array('name'       => 'GDrive',

@@ -54,7 +54,7 @@ function plugin_gdrive_install() {
 			}
 		}
 	}
-	if (!TableExists("glpi_plugin_gdrive_configs")) {
+	if (!$DB->TableExists("glpi_plugin_gdrive_configs")) {
 		$query = "  CREATE TABLE `glpi_plugin_gdrive_configs` (
 				`id` INT(11) NOT NULL AUTO_INCREMENT,
 				`developer_key` VARCHAR(250) NOT NULL DEFAULT 'xxxxxxxYYYYYYYY-12345678',
