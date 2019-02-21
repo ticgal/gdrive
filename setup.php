@@ -42,7 +42,7 @@ function plugin_version_gdrive() {
 	return array('name'       => 'GDrive',
 		'version'        => PLUGIN_GDRIVE_VERSION,
 		'author'         => '<a href="https://tic.gal">TICgal</a>',
-		'homepage'       => 'https://tic.gal',
+		'homepage'       => 'https://tic.gal/en/project/gdrive-integration-glpi-google-drive/',
 		'license'        => 'GPLv3+',
 		'minGlpiVersion' => "9.2",
 		'requirements'   => [
