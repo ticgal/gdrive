@@ -69,9 +69,7 @@ class PluginGdriveConfig extends CommonDBTM {
 	* @return mixed
 	*/
 	static function getTypeName($nb=0) {
-		global $LANG;
-
-		return $LANG['gdrive']['config']['setup'];
+		return __('Gdrive setup','gdrive');
 	}
 
 	/**
@@ -80,9 +78,7 @@ class PluginGdriveConfig extends CommonDBTM {
 	* @return mixed
 	*/
 	function getName($with_comment=0) {
-		global $LANG;
-
-		return $LANG['gdrive']['title'][1];
+		return __('Gdrive','gdrive');
 	}
 
 	/**
@@ -119,17 +115,17 @@ class PluginGdriveConfig extends CommonDBTM {
 		$config->showFormHeader(['colspan' => 4]);
 
 		echo "<tr class='tab_bg_1'>";
-		echo "<td >".$LANG['gdrive']['config']['developer_key']."</td><td >";
+		echo "<td >".__('The Browser API key obtained from the Google API Console','gdrive')."</td><td >";
 		echo "<input size='50' type='text' name='developer_key' value='".$config->fields['developer_key']."'>";
 		echo "</td></tr>\n";
 
 		echo "<tr class='tab_bg_1'>";
-		echo "<td >".$LANG['gdrive']['config']['client_id']."</td><td >";
+		echo "<td >".__('The Client ID obtained from the Google API Console','gdrive')."</td><td >";
 		echo "<input size='50' type='text' name='client_id' value='".$config->fields['client_id']."'>";
 		echo "</td></tr>\n";
 
 		echo "<tr class='tab_bg_1'>";
-		echo "<td >".$LANG['gdrive']['config']['app_id']."</td><td >";
+		echo "<td >".__("See 'Project number' under 'IAM & Admin' > 'Settings'",'gdrive')."</td><td >";
 		echo "<input type='text' name='app_id' value='".$config->fields['app_id']."'>";
 		echo "</td></tr>\n";
 
@@ -139,10 +135,9 @@ class PluginGdriveConfig extends CommonDBTM {
 	}
 
 	function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
-		global $LANG;
 
 		if ($item->getType()=='Config') {
-			return $LANG['gdrive']['title'][1];
+			return __('GDrive','gdrive');
 		}
 		return '';
 	}
