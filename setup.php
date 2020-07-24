@@ -34,45 +34,23 @@
  ---------------------------------------------------------------------- */
 define ('PLUGIN_GDRIVE_VERSION', '1.2.0');
 // Minimal GLPI version, inclusive
-define("PLUGIN_GDRIVE_MIN_GLPI", "9.2");
+define("PLUGIN_GDRIVE_MIN_GLPI", "9.5");
 // Maximum GLPI version, exclusive
-define("PLUGIN_GDRIVE_MAX_GLPI", "9.5");
+define("PLUGIN_GDRIVE_MAX_GLPI", "9.6");
 
 function plugin_version_gdrive() {
-	return array('name'       => 'GDrive',
+	return ['name'       => 'GDrive',
 		'version'        => PLUGIN_GDRIVE_VERSION,
 		'author'         => '<a href="https://tic.gal">TICgal</a>',
 		'homepage'       => 'https://tic.gal/en/project/gdrive-integration-glpi-google-drive/',
 		'license'        => 'GPLv3+',
-		'minGlpiVersion' => "9.2",
 		'requirements'   => [
 			'glpi'   => [
 				'min' => PLUGIN_GDRIVE_MIN_GLPI,
 				'max' => PLUGIN_GDRIVE_MAX_GLPI,
 			]
-		]);
-}
-
-/**
- * Check plugin's prerequisites before installation
- */
-function plugin_gdrive_check_prerequisites() {
-	$version = preg_replace('/^((\d+\.?)+).*$/', '$1', GLPI_VERSION);
-	if (version_compare($version,'9.2','<')) {
-		$matchMinGlpiReq = version_compare($version, PLUGIN_GDRIVE_MIN_GLPI, '>=');
-		$matchMaxGlpiReq = version_compare($version, PLUGIN_GDRIVE_MAX_GLPI, '<');
-		if (!$matchMinGlpiReq || !$matchMaxGlpiReq) {
-			echo vsprintf(
-				'This plugin requires GLPI >= %1$s and < %2$s.',
-				[
-					PLUGIN_GDRIVE_MIN_GLPI,
-					PLUGIN_GDRIVE_MAX_GLPI,
-				]
-			);
-			return false;
-		}
-	}
-	return true;
+		]
+	];
 }
 
 /**
@@ -86,12 +64,11 @@ function plugin_init_gdrive() {
 	global $PLUGIN_HOOKS;
 
 	if (Session::haveRightsOr("config", [READ, UPDATE])) {
-		Plugin::registerClass('PluginGdriveConfig', array('addtabon' => 'Config'));
+		Plugin::registerClass('PluginGdriveConfig', ['addtabon' => 'Config']);
 		$PLUGIN_HOOKS['config_page']['gdrive'] = 'front/config.form.php';
 	}
 	$PLUGIN_HOOKS['csrf_compliant']['gdrive'] = true;
 
-	//Plugin::registerClass('PluginGdriveTicket',array('addtabon' => array('Ticket')));
 	$PLUGIN_HOOKS['post_item_form']['gdrive'] = ['PluginGdriveTicket', 'postForm'];
 	
 }

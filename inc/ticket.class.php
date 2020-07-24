@@ -48,13 +48,13 @@ class PluginGdriveTicket extends CommonDBTM{
 	}
 
 	static public function postForm($params) {
-		global $CFG_GLPI,$LANG;
+		global $CFG_GLPI;
 		$item = $params['item'];
 		$config= PluginGdriveConfig::getConfig();
 
 		switch ($item->getType()) {
 			case 'Ticket':
-			case 'TicketFollowup':
+			case 'ITILFollowup':
 			case 'TicketTask':
 				$out="<script type='text/javascript'>
 
@@ -144,14 +144,14 @@ class PluginGdriveTicket extends CommonDBTM{
 
 				// A simple callback implementation.
 				function pickerCallback(data) {
-					var message = '".$LANG['grive']['load']."';
+					var message = '".__('Uploaded file','gdrive')."';
 					if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
 						var fileInput=document.querySelectorAll('[type=file]')[0];
 						for(var i=0;i<data[google.picker.Response.DOCUMENTS].length;i++){
 							var file=data[google.picker.Response.DOCUMENTS][i];
 							downloadFile(file,fileInput,function(res){
 								if(data==false){
-									message='".$LANG['grive']['error']."';
+									message='".__('Error loading the file','gdrive')."';
 								}
 							});
 						}
@@ -188,9 +188,9 @@ class PluginGdriveTicket extends CommonDBTM{
 				</tr>";
 				$out .= "<tr>
 					<td>
-						<label>".$LANG['grive']['label']."</label>
+						<label>".__('Select file Drive','gdrive')."</label>
 					</td>
-					<td align='center'><button type='button' id='auth' disabled>".$LANG['grive']['button']."</button><div id='result'></div></td>
+					<td align='center'><button type='button' id='auth' disabled>".__('Select file','gdrive')."</button><div id='result'></div></td>
 				</tr>";
 				$out.='<script type="text/javascript" src="https://apis.google.com/js/client.js?onload=loadPicker"></script>';
 				echo $out;
