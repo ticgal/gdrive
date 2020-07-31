@@ -1,6 +1,6 @@
 <root>
    <name>GDrive</name>
-   <key>GDrive</key>
+   <key>gdrive</key>
    <state>stable</state> <!-- stable | unstable | beta | alpha -->
    <logo>https://github.com/ticgal/GDrive/raw/multimedia/gdrive-40.png</logo>
    <description>
