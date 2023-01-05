@@ -1,5 +1,3 @@
-<?php
-/*
 -------------------------------------------------------------------------
 Gdrive plugin for GLPI
 Copyright (C) 2023 by the TICgal Team.
@@ -26,22 +24,3 @@ http://www.gnu.org/licenses/agpl-3.0-standalone.html
 @link      https://tic.gal
 @since     2018
 ---------------------------------------------------------------------- 
-*/
-include("../../../inc/includes.php");
-
-$config = new PluginGdriveConfig();
-if (isset($_POST["update"])) {
-	$config->check($_POST['id'], UPDATE);
-
-	// save
-	$config->update($_POST);
-
-
-	Html::back();
-
-} else if (isset($_POST["refresh"])) {
-	$config->refresh($_POST); // used to refresh process list, task category list
-	Html::back();
-}
-
-Html::redirect($CFG_GLPI["root_doc"] . "/front/config.form.php?forcetab=" . urlencode('PluginGdriveConfig$1'));
