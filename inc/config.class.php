@@ -115,6 +115,11 @@ class PluginGdriveConfig extends CommonDBTM
 	static function showConfigForm($item)
 	{
 		$config = self::getInstance();
+		$labels = [
+			'developer_key' => __('The Browser API key obtained from the Google API Console', 'gdrive'),
+			'client_id' => __('The Client ID obtained from the Google API Console', 'gdrive'),
+			'app_id' => __("See 'Project number' under 'IAM & Admin' > 'Settings'", 'gdrive'),
+		];
 		$options = [
 			'full_width' => true
 		];
@@ -124,6 +129,7 @@ class PluginGdriveConfig extends CommonDBTM
 			$templatePath,
 			[
 				'item' => $config,
+				'labels' => $labels,
 				'options' => $options,
 			]
 		);
