@@ -12,6 +12,9 @@ sed -i "s/SOME DESCRIPTIVE TITLE/GDRIVE Glpi Plugin/" gdrive.pot
 sed -i "s/FIRST AUTHOR <EMAIL@ADDRESS>, YEAR./TICgal, $(date +%Y)/" gdrive.pot
 sed -i "s/YEAR/$(date +%Y)/" gdrive.pot
 
+localazy upload
+localazy download
+
 for a in $(ls *.po); do
 	msgmerge -U $a gdrive.pot
 	msgfmt $a -o "${a%.*}.mo"

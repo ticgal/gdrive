@@ -1,34 +1,6 @@
 #!/bin/bash
-#
-# -------------------------------------------------------------------------
-# make_release.sh
-# Based on fusioninventory-for-glpi make_release.sh
-# Copyright (C) 2018-2019 by TICgal 
-# https://github.com/ticgal/gdrive
-# -------------------------------------------------------------------------
-# LICENSE
-# This file is part of the GDRIVE plugin.
-# GDRIVE plugin is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-# GDRIVE plugin is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License
-# along with GDRIVE. If not, see <http://www.gnu.org/licenses/>.
-# --------------------------------------------------------------------------
-# @package   GDRIVE
-# @author    TICgal
-# @copyright Copyright (c) 2018-2019 TICgal
-# @license   AGPL License 3.0 or (at your option) any later version
-#            http://www.gnu.org/licenses/agpl-3.0-standalone.html
-# @link      https://tic.gal
-# @since     2018
-# --------------------------------------------------------------------------
 
-PLUGINNAME="gdrive"
+PLUGINNAME="borgbase"
 
 if [ ! "$#" -eq 2 ]
 then
@@ -47,7 +19,7 @@ INIT_DIR=$1
 RELEASE=$2
 
 # remove old tmp files
-if [ ! e $/tmp/$PLUGINNAME ]
+if [ ! -e /tmp/$PLUGINNAME ]
 then
     echo "Deleting temp directory"
     rm -rf /tmp/$PLUGINNAME
@@ -95,18 +67,18 @@ rm -rf .gitignore
 rm -rf .travis.yml
 rm -rf .coveralls.yml
 rm -rf phpunit.xml.dist
-rm -rf composer.json
 rm -rf composer.lock
 rm -rf .composer.hash
 rm -rf ISSUE_TEMPLATE.md
 rm -rf PULL_REQUEST_TEMPLATE.md
 rm -rf .tx
-rm -rf gdrive.xml
+rm -rf $PLUGINNAME.xml
 rm -rf screenshots
+rm -rf locales/localazy*
 
 echo "Creating tarball"
 cd ..
-tar czf "$PLUGINNAME-$RELEASE.tar.tgz" $PLUGINNAME
+tar czf "glpi-$PLUGINNAME-$RELEASE.tar.tgz" $PLUGINNAME
 
 cd $INIT_PWD;
 
