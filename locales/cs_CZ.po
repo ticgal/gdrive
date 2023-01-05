@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-04 16:26+0100\n"
+"POT-Creation-Date: 2023-01-05 16:27+0100\n"
 "PO-Revision-Date: 2020-07-24 11:11+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -18,40 +18,42 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n>=2 && n<=4 ? 1 : 2);\n"
 
-#: inc/config.class.php:73
+#: inc/config.class.php:74
 msgid "Gdrive setup"
 msgstr "Nastavení pro Gdrive"
 
-#: inc/config.class.php:83
-msgid "Gdrive"
-msgstr "Gdrive"
-
-#: inc/config.class.php:137 inc/ticket.class.php:43
+#: inc/config.class.php:138
 msgid "GDrive"
 msgstr "GDrive"
 
-#: inc/ticket.class.php:182
+#: inc/ticket.class.php:186
 msgid "Uploaded file"
 msgstr "Nahraný soubor"
 
-#: inc/ticket.class.php:189
+#: inc/ticket.class.php:193
 msgid "Error loading the file"
 msgstr "Chyba načítání souboru"
 
-#: inc/ticket.class.php:234
+#: inc/ticket.class.php:237
 msgid "Select file"
 msgstr "Vybrat soubor"
 
-#~ msgid "The Browser API key obtained from the Google API Console"
-#~ msgstr ""
-#~ "Klíč k aplikačnímu progr. rozhraní pro prohlížeč, získaný z Google API "
-#~ "konzole"
+#: templates/config.html.twig:54
+msgid "The Browser API key obtained from the Google API Console"
+msgstr ""
+"Klíč k aplikačnímu progr. rozhraní pro prohlížeč, získaný z Google API "
+"konzole"
 
-#~ msgid "The Client ID obtained from the Google API Console"
-#~ msgstr "Identifikátork kienta, získaný z Google API konzole"
+#: templates/config.html.twig:63
+msgid "The Client ID obtained from the Google API Console"
+msgstr "Identifikátork kienta, získaný z Google API konzole"
 
-#~ msgid "See 'Project number' under 'IAM & Admin' > 'Settings'"
-#~ msgstr "Viz „Číslo projektu“ v „IAM a správa“ > „Nastavení“"
+#: templates/config.html.twig:72
+msgid "See 'Project number' under 'IAM & Admin' > 'Settings'"
+msgstr "Viz „Číslo projektu“ v „IAM a správa“ > „Nastavení“"
+
+#~ msgid "Gdrive"
+#~ msgstr "Gdrive"
 
 #~ msgid "Select file Drive"
 #~ msgstr "Vybrat Drive souboru"

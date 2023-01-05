@@ -51,7 +51,7 @@ http://www.gnu.org/licenses/agpl-3.0-standalone.html
                         {{ fields.textField(
                         'developer_key',
                         item.fields['developer_key'],
-                        labels['developer_key'],
+                        __('The Browser API key obtained from the Google API Console', 'gdrive'),
                         options
                         ) }}
                         {% endif %}
@@ -60,7 +60,7 @@ http://www.gnu.org/licenses/agpl-3.0-standalone.html
                         {{ fields.textField(
                         'client_id',
                         item.fields['client_id'],
-                        labels['client_id'],
+                        __('The Client ID obtained from the Google API Console', 'gdrive'),
                         options
                         ) }}
                         {% endif %}
@@ -69,7 +69,7 @@ http://www.gnu.org/licenses/agpl-3.0-standalone.html
                         {{ fields.textField(
                         'app_id',
                         item.fields['app_id'],
-                        labels['app_id'],
+                        __("See 'Project number' under 'IAM & Admin' > 'Settings'", 'gdrive'),
                         options
                         ) }}
                         {% endif %}

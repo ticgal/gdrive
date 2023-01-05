@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gdrive\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-04 16:30+0100\n"
+"POT-Creation-Date: 2023-01-05 16:50+0100\n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10,26 +10,35 @@ msgstr ""
 "X-Generator: Localazy (https://localazy.com)\n"
 "Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
 
-#: inc/config.class.php:73
+#: inc/config.class.php:74
 msgid "Gdrive setup"
 msgstr "Configuración de Gdrive"
 
-#: inc/config.class.php:83
-msgid "Gdrive"
-msgstr "Gdrive"
-
-#: inc/config.class.php:137 inc/ticket.class.php:43
+#: inc/config.class.php:138
 msgid "GDrive"
 msgstr "Gdrive"
 
-#: inc/ticket.class.php:182
+#: inc/ticket.class.php:186
 msgid "Uploaded file"
 msgstr "Archivo cargado"
 
-#: inc/ticket.class.php:189
+#: inc/ticket.class.php:193
 msgid "Error loading the file"
 msgstr "Error al cargar el archivo"
 
-#: inc/ticket.class.php:234
+#: inc/ticket.class.php:237
 msgid "Select file"
 msgstr "Seleccionar archivo"
+
+#: templates/config.html.twig:54
+msgid "The Browser API key obtained from the Google API Console"
+msgstr "La clave API del navegador obtenida de la consola API de Google"
+
+#: templates/config.html.twig:63
+msgid "The Client ID obtained from the Google API Console"
+msgstr "El ID de cliente obtenido de la Consola API de Google"
+
+#: templates/config.html.twig:72
+msgid "See 'Project number' under 'IAM & Admin' > 'Settings'"
+msgstr ""
+"Consulte 'Número de proyecto' en 'IAM y Administración' > 'Configuración'"

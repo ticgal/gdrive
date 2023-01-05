@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-04 16:26+0100\n"
+"POT-Creation-Date: 2023-01-05 16:27+0100\n"
 "PO-Revision-Date: 2020-07-24 11:08+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -19,39 +19,40 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 
-#: inc/config.class.php:73
+#: inc/config.class.php:74
 msgid "Gdrive setup"
 msgstr "Gdrive настройки"
 
-#: inc/config.class.php:83
-msgid "Gdrive"
-msgstr "Gdrive"
-
-#: inc/config.class.php:137 inc/ticket.class.php:43
+#: inc/config.class.php:138
 msgid "GDrive"
 msgstr "GDrive"
 
-#: inc/ticket.class.php:182
+#: inc/ticket.class.php:186
 msgid "Uploaded file"
 msgstr "Файл загружен"
 
-#: inc/ticket.class.php:189
+#: inc/ticket.class.php:193
 msgid "Error loading the file"
 msgstr "Ошибка загрузки файла"
 
-#: inc/ticket.class.php:234
+#: inc/ticket.class.php:237
 msgid "Select file"
 msgstr "Выбрать файл"
 
-#~ msgid "The Browser API key obtained from the Google API Console"
-#~ msgstr "Ключ API браузера, полученный из Google API"
+#: templates/config.html.twig:54
+msgid "The Browser API key obtained from the Google API Console"
+msgstr "Ключ API браузера, полученный из Google API"
 
-#~ msgid "The Client ID obtained from the Google API Console"
-#~ msgstr "Идентификатор клиента, полученный из Google API"
+#: templates/config.html.twig:63
+msgid "The Client ID obtained from the Google API Console"
+msgstr "Идентификатор клиента, полученный из Google API"
 
-#~ msgid "See 'Project number' under 'IAM & Admin' > 'Settings'"
-#~ msgstr ""
-#~ "Смотрите 'Номер проекта' в разделе 'IAM & Администратор' > 'Настройки'"
+#: templates/config.html.twig:72
+msgid "See 'Project number' under 'IAM & Admin' > 'Settings'"
+msgstr "Смотрите 'Номер проекта' в разделе 'IAM & Администратор' > 'Настройки'"
+
+#~ msgid "Gdrive"
+#~ msgstr "Gdrive"
 
 #~ msgid "Select file Drive"
 #~ msgstr "Выберите файл на диске"

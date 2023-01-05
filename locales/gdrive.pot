@@ -1,5 +1,5 @@
 # GDRIVE Glpi Plugin.
-# Copyright (C) 2023 TICgal
+# Copyright (C) 2023 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # TICgal, 2023
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-04 16:30+0100\n"
+"POT-Creation-Date: 2023-01-05 16:50+0100\n"
 "PO-Revision-Date: 2023-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,26 +17,34 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: inc/config.class.php:73
+#: inc/config.class.php:74
 msgid "Gdrive setup"
 msgstr ""
 
-#: inc/config.class.php:83
-msgid "Gdrive"
-msgstr ""
-
-#: inc/config.class.php:137 inc/ticket.class.php:43
+#: inc/config.class.php:138
 msgid "GDrive"
 msgstr ""
 
-#: inc/ticket.class.php:182
+#: inc/ticket.class.php:186
 msgid "Uploaded file"
 msgstr ""
 
-#: inc/ticket.class.php:189
+#: inc/ticket.class.php:193
 msgid "Error loading the file"
 msgstr ""
 
-#: inc/ticket.class.php:234
+#: inc/ticket.class.php:237
 msgid "Select file"
+msgstr ""
+
+#: templates/config.html.twig:54
+msgid "The Browser API key obtained from the Google API Console"
+msgstr ""
+
+#: templates/config.html.twig:63
+msgid "The Client ID obtained from the Google API Console"
+msgstr ""
+
+#: templates/config.html.twig:72
+msgid "See 'Project number' under 'IAM & Admin' > 'Settings'"
 msgstr ""
