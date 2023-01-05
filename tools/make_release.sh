@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PLUGINNAME="borgbase"
+PLUGINNAME="gdrive"
 
 if [ ! "$#" -eq 2 ]
 then
