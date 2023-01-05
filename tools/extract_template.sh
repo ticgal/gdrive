@@ -1,6 +1,8 @@
+#!/bin/bash
+NAME=gdrive
+
 SCRIPT_DIR=$(dirname $0)
 PLUGIN_DIR=$(readlink -f "$SCRIPT_DIR/..")
-NAME=gdrive
 POTFILE=$NAME.pot
 LOCALES=$PLUGIN_DIR/locales
 
