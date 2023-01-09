@@ -61,9 +61,43 @@ class PluginGdriveTicket extends CommonDBTM
 			case 'ChangeTask':
 			case 'TicketValidation':
 			case 'ChangeValidation':
-				$out = '<script src="https://accounts.google.com/gsi/client" async defer></script>';
+				echo self::addGdriveScripts($config);
+				echo self::addGdriveButton();
+				break;
+		}
+	}
 
-				$out .= "<script type='text/javascript'>
+	static public function postTab($params)
+	{
+		global $CFG_GLPI;
+		$item = $params['item'];
+		$itemtype = $params['options']['itemtype'];
+		$config = PluginGdriveConfig::getConfig();
+
+		switch ($item->getType()) {
+			case 'Computer':
+				if ($itemtype == 'Document_Item') {
+					echo self::addGdriveScripts($config);
+					echo '<script type="text/javascript" src="/public/lib/tinymce.min.js"></script>';
+					echo self::addGdriveButton();
+
+					$out = '<script>
+					var btnExist = $("#gdrivebtn");
+					$(".firstbloc").append(btnExist);
+					</script>';
+
+					echo $out;
+				}
+				break;
+		}
+	}
+
+	public static function addGdriveScripts($config)
+	{
+		$out = '';
+		$out .= '<script src="https://accounts.google.com/gsi/client" async defer></script>';
+
+		$out .= "<script type='text/javascript'>
 				// The Browser API key obtained from the Google API Console.
 				// Replace with your own Browser API key, or your own key.
 				var developerKey = '" . $config->fields['developer_key'] . "';
@@ -83,7 +117,7 @@ class PluginGdriveTicket extends CommonDBTM
 				var client;
 				var oauthToken;
 				var pickerApiLoaded = false;
-				var numEditor = 0;
+				var idEditor = 0;
 
 				// Also known as TokenClient
 				function initClient(){
@@ -110,17 +144,26 @@ class PluginGdriveTicket extends CommonDBTM
 				function onAuthApiLoad() {
 					//var authBtn = document.getElementById('auth');
 					var authBtns = $('.authbtn');
+					console.log(document.querySelectorAll('input[type=file]'));
 
-					var n = 0;
 					for (let btn of authBtns) {
+						var form = btn.parentElement.parentElement;
+						var inputs = form.getElementsByTagName('input');
+						var fileupload;
+						for(var input of inputs){
+							if(input.id.includes('fileupload')){
+								fileupload = input.id;
+								break;
+							};
+						}
+						
 						btn.disabled = false;
-						btn.value = n;
+						btn.value = fileupload;
 						btn.addEventListener('click', function() {
-							numEditor = btn.value;
+							idEditor = btn.value;
 							initClient();
 							getToken();
 						});
-						n++;
 					}
 				}
 
@@ -185,7 +228,7 @@ class PluginGdriveTicket extends CommonDBTM
 				function pickerCallback(data) {
 					var message = '" . __('Uploaded file', 'gdrive') . "';
 					if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
-						var fileInput=document.querySelectorAll('[type=file]')[numEditor];
+						var fileInput=$('#' + idEditor)[0];
 						for(var i=0;i<data[google.picker.Response.DOCUMENTS].length;i++){
 							var file=data[google.picker.Response.DOCUMENTS][i];
 							downloadFile(file,fileInput,function(res){
@@ -225,23 +268,20 @@ class PluginGdriveTicket extends CommonDBTM
 				}
 				</script>";
 
-				$out .= '<script type="text/javascript" src="https://apis.google.com/js/client.js?onload=loadPicker"></script>';
+		$out .= '<script type="text/javascript" src="https://apis.google.com/js/client.js?onload=loadPicker"></script>';
 
-				$out .= "<div class='d-flex flex-column mx-3'>";
-				$out .= "<tr>
-					<th colspan='2'><span class='mb-1'><i class='" . self::getIcon() . "'></i> " . self::getTypeName(2) . "</span></th>
-					</tr>";
+		return $out;
+	}
 
-				$out .= "<tr>
-					<td align='center'>
-						<button type='button' class='btn mb-1 authbtn' id='auth' disabled>" . __('Select file', 'gdrive') . "</button>
-						<div class='mb-1' id='result'></div>
-					</td>
-					</tr>";
-				$out .= '</div>';
+	public static function addGdriveButton()
+	{
+		$out = '';
 
-				echo $out;
-				break;
-		}
+		$out .= "<div class='d-flex flex-column mx-3' id='gdrivebtn'>";
+		$out .= "<tr><th colspan='2'><span class='mb-1'><i class='" . self::getIcon() . "'></i> " . self::getTypeName(2) . "</span></th></tr>";
+		$out .= "<tr><td align='center'><button type='button' class='btn mb-1 authbtn' id='auth' disabled>" . __('Select file', 'gdrive') . "</button>	<div class='mb-1' id='result'></div></td></tr>";
+		$out .= '</div>';
+
+		return $out;
 	}
 }

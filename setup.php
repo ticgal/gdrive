@@ -69,4 +69,5 @@ function plugin_init_gdrive()
 	$PLUGIN_HOOKS['csrf_compliant']['gdrive'] = true;
 
 	$PLUGIN_HOOKS['post_item_form']['gdrive'] = ['PluginGdriveTicket', 'postForm'];
+	$PLUGIN_HOOKS['post_show_tab']['gdrive'] = ['PluginGdriveTicket', 'postTab'];
 }
