@@ -1,6 +1,8 @@
 name: Upload to Localazy
 on: 
   push:
+    branches:
+    - develop
     paths: 
       - 'locales/en.json'
 

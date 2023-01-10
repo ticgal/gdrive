@@ -1,6 +1,8 @@
 name: Download from Localazy
 on: 
   push:
+    branches:
+    - develop
     tags:
     - 'v*'
 
