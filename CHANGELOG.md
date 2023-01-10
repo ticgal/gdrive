@@ -3,10 +3,9 @@
 ## 2.0.0 - 2023-01-05
 ### Features
 - Compatibility with GLPI 10 (#12836)
-- GDrive button on Assets > Computer > Documents (#12937)
-- Twig Templates
-- Translation with Localazy
+- GDrive button on Assets > Documents (#12937)
 - GDrive for Tickets, Problems and Changes
+- Translation with Localazy
 
 ## 1.3.0 - 2020-07-31
 ### Features

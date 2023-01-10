@@ -76,6 +76,21 @@ class PluginGdriveTicket extends CommonDBTM
 
 		switch ($item->getType()) {
 			case 'Computer':
+			case 'Monitor':
+			case 'Software':
+			case 'NetworkEquipment':
+			case 'Peripheral':
+			case 'Printer':
+			case 'CartridgeItem':
+			case 'ConsumableItem':
+			case 'Phone':
+			case 'Rack':
+			case 'Enclosure':
+			case 'PDU':
+			case 'PassiveDCEquipment':
+			//case 'Unmanaged':
+			//case 'Cable':
+			case 'Item_DeviceSimcard':
 				if ($itemtype == 'Document_Item') {
 					echo self::addGdriveScripts($config);
 					echo '<script type="text/javascript" src="/public/lib/tinymce.min.js"></script>';
