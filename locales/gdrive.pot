@@ -1,5 +1,5 @@
 # GDRIVE Glpi Plugin.
-# Copyright (C) 2023 THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) 2023 TICgal
 # This file is distributed under the same license as the PACKAGE package.
 # TICgal, 2023
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-05 16:50+0100\n"
+"POT-Creation-Date: 2023-01-10 09:30+0100\n"
 "PO-Revision-Date: 2023-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,15 +25,15 @@ msgstr ""
 msgid "GDrive"
 msgstr ""
 
-#: inc/ticket.class.php:186
+#: inc/ticket.class.php:229
 msgid "Uploaded file"
 msgstr ""
 
-#: inc/ticket.class.php:193
+#: inc/ticket.class.php:236
 msgid "Error loading the file"
 msgstr ""
 
-#: inc/ticket.class.php:237
+#: inc/ticket.class.php:282
 msgid "Select file"
 msgstr ""
 
