@@ -144,7 +144,6 @@ class PluginGdriveTicket extends CommonDBTM
 				function onAuthApiLoad() {
 					//var authBtn = document.getElementById('auth');
 					var authBtns = $('.authbtn');
-					console.log(document.querySelectorAll('input[type=file]'));
 
 					for (let btn of authBtns) {
 						var form = btn.parentElement.parentElement;
