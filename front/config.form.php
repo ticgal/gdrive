@@ -39,9 +39,6 @@ if (isset($_POST["update"])) {
 
 	Html::back();
 
-} else if (isset($_POST["refresh"])) {
-	$config->refresh($_POST); // used to refresh process list, task category list
-	Html::back();
 }
 
 Html::redirect($CFG_GLPI["root_doc"] . "/front/config.form.php?forcetab=" . urlencode('PluginGdriveConfig$1'));

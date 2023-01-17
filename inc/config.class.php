@@ -86,7 +86,7 @@ class PluginGdriveConfig extends CommonDBTM
 
 	/**
 	 * Summary of getInstance
-	 * @return PluginProcessmakerConfig
+	 * @return PluginGdriveConfig
 	 */
 	static function getInstance()
 	{
