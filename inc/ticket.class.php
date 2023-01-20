@@ -92,8 +92,8 @@ class PluginGdriveTicket extends CommonDBTM
 			//case 'Cable':
 			case 'Item_DeviceSimcard':
 				if ($itemtype == 'Document_Item') {
-					echo self::addGdriveScripts($config);
 					echo '<script type="text/javascript" src="/public/lib/tinymce.min.js"></script>';
+					echo self::addGdriveScripts($config);
 					echo self::addGdriveButton($config);
 
 					$out = '<script>
@@ -110,7 +110,7 @@ class PluginGdriveTicket extends CommonDBTM
 	public static function addGdriveScripts($config)
 	{
 		$out = '';
-		$out .= '<script src="https://accounts.google.com/gsi/client" onload="loadPicker()" async defer></script>';
+		$out .= '<script src="https://accounts.google.com/gsi/client" async defer></script>';
 
 		$out .= "<script type='text/javascript'>
 				// The Browser API key obtained from the Google API Console.
@@ -124,33 +124,42 @@ class PluginGdriveTicket extends CommonDBTM
 				// See 'Project number' under 'IAM & Admin' > 'Settings'
 				var appId = '" . $config->fields['app_id'] . "';
 
-				// No longer an array
-				// Scope: View and download Google Drive files
+				// Scope: See and download Google Drive files
 				var scope = 'https://www.googleapis.com/auth/drive.readonly';
 
 				var tokenClient;
 				var access_token;
-
-				var oauthToken;
 				var pickerInited = false;
 				var idEditor = 0;
 
-				// Also known as TokenClient
-				function initClient(){
-					console.log('INIT CLIENT');
+				// Use the Google API Loader script to load the google.picker script.
+				function loadPicker() {
+					gapi.load('client', {'callback': initClient});
+					gapi.load('picker', {'callback': initializePicker});
+					enableButtons();
+				}
+
+				/**
+				 * Callback after the API client is loaded. Loads the
+				 * discovery doc to initialize the API.
+				 */
+				async function initializePicker() {
+					await gapi.client.load('https://www.googleapis.com/discovery/v1/apis/drive/v3/rest');
+					pickerInited = true;
+				}
+
+				async function initClient(){
 					tokenClient = google.accounts.oauth2.initTokenClient({
 						client_id: clientId,
 						scope: scope,
 						prompt: '',
 						callback: (tokenResponse) => {
-							console.log(tokenResponse);
 							handleAuthResult(tokenResponse);
 						},
 					});
 				}
 
 				function handleAuthResult(authResult) {
-					console.log('AUTH RESULT');
 					if (authResult && !authResult.error) {
 						access_token = authResult.access_token;
 						document.cookie='access_token='+access_token;
@@ -173,26 +182,8 @@ class PluginGdriveTicket extends CommonDBTM
 					google.accounts.oauth2.revoke(access_token, () => {console.log('access token revoked')});
 				}
 
-				// Use the Google API Loader script to load the google.picker script.
-				function loadPicker() {
-					gapi.load('client', {'callback': initClient});
-					gapi.load('picker', {'callback': initializePicker});
-					onAuthApiLoad();
-				}
-
-				/**
-				 * Callback after the API client is loaded. Loads the
-				 * discovery doc to initialize the API.
-				 */
-				async function initializePicker() {
-					console.log('LOADING PICKER FILES');
-					await gapi.client.load('https://www.googleapis.com/discovery/v1/apis/drive/v3/rest');
-					pickerInited = true;
-				}
-
-				function onAuthApiLoad() {
+				function enableButtons() {
 					var authBtns = $('.authbtn');
-					console.log(authBtns);
 
 					for (let btn of authBtns) {
 						var form = btn.parentElement.parentElement.parentElement;
@@ -233,7 +224,6 @@ class PluginGdriveTicket extends CommonDBTM
 
 				// Create and render a Picker object for picking user Documents.
 				function createPicker() {
-					console.log('CREATE PICKER');
 					var picker = new google.picker.PickerBuilder()
 					.enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
 					.setAppId(appId)
@@ -296,6 +286,13 @@ class PluginGdriveTicket extends CommonDBTM
 					}
 				}
 
+				function handleCredentialResponse(response) {
+					const responsePayload = decodeResponse(response.credential);
+					if(responsePayload.sub){
+						loadPicker();
+					}
+				}
+				
 				function decodeResponse (token) {
 					var base64Url = token.split('.')[1];
 					var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -306,48 +303,9 @@ class PluginGdriveTicket extends CommonDBTM
 					return JSON.parse(jsonPayload);
 				}
 
-				function handleCredentialResponse(response) {
-					const responsePayload = decodeResponse(response.credential);
-					if(responsePayload.sub){
-						loadPicker();
-					}
-
-					/*
-					console.log('ID: ' + responsePayload.sub);
-					console.log('Full Name: ' + responsePayload.name);
-					console.log('Given Name: ' + responsePayload.given_name);
-					console.log('Family Name: ' + responsePayload.family_name);
-					console.log('Image URL: ' + responsePayload.picture);
-					console.log('Email: ' + responsePayload.email);
-					*/
-				}
-
-				/**
-				 *  Sign in the user upon button click.
-				 */
-				function handleAuthClick() {
-					tokenClient.callback = async (response) => {
-					if (response.error !== undefined) {
-						throw (response);
-					}
-					access_token = response.access_token;
-					//document.getElementById('signout_button').style.visibility = 'visible';
-					//document.getElementById('authorize_button').innerText = 'Refresh';
-					await createPicker();
-					};
-
-					if (access_token === null) {
-					// Prompt the user to select a Google Account and ask for consent to share their data
-					// when establishing a new session.
-					tokenClient.requestAccessToken({prompt: 'consent'});
-					} else {
-					// Skip display of account chooser and consent dialog for an existing session.
-					tokenClient.requestAccessToken({prompt: ''});
-					}
-				}
 				</script>";
 
-		$out .= '<script async defer src="https://apis.google.com/js/api.js" onload="loadPicker()"></script>';
+		$out .= '<script async defer src="https://apis.google.com/js/api.js"></script>';
 
 		return $out;
 	}
@@ -365,9 +323,20 @@ class PluginGdriveTicket extends CommonDBTM
 		$out .= "<tr><td align='center'><div class='d-flex align-items-stretch mb-1'>";
 		$out .= '<div id="g_id_onload"
 					data-client_id="' . $config->fields['client_id'] . '"
+					data-context="signin"
+					data-auto_prompt="false"
+					data-ux_mode="popup"
 					data-callback="handleCredentialResponse">
 				</div>
-				<div class="g_id_signin" data-type="standard"></div>';
+				<div class="g_id_signin" 
+					data-type="standard"
+					data-type="standard"
+					data-shape="rectangular"
+					data-theme="outline"
+					data-text="signin_with"
+					data-size="large"
+					data-logo_alignment="left">
+				</div>';
 		$out .= "<button type='button' class='btn authbtn flex-grow-1' id='auth' disabled>" . __('Select file', 'gdrive') . "</button>";
 		$out .= "</div></td></tr>";
 
