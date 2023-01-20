@@ -1,5 +1,9 @@
 # GDrive - GLPI Plugin CHANGELOG
 
+## 2.1.0 - 2023-01-20
+### Features
+- Sign in with Google Authentication & Authorization (#13177)
+
 ## 2.0.0 - 2023-01-05
 ### Features
 - Compatibility with GLPI 10 (#12836)
