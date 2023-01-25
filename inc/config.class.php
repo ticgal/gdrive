@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 -------------------------------------------------------------------------
 Gdrive plugin for GLPI
 Copyright (C) 2023 by the TICgal Team.
@@ -18,7 +18,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Gdrive. If not, see <http://www.gnu.org/licenses/>.
 --------------------------------------------------------------------------
-@package   gdrive
+ *
+@package   Gdrive
 @author    the TICgal team
 @copyright Copyright (c) 2023 TICgal team
 @license   AGPL License 3.0 or (at your option) any later version
@@ -26,126 +27,156 @@ http://www.gnu.org/licenses/agpl-3.0-standalone.html
 @link      https://tic.gal
 @since     2018
 ---------------------------------------------------------------------- 
-*/
+ */
 if (!defined('GLPI_ROOT')) {
-	die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 use Glpi\Application\View\TemplateRenderer;
 
+/**
+ * Summary of PluginGdriveConfig
+ */
 class PluginGdriveConfig extends CommonDBTM
 {
-	static private $_instance = NULL;
+    static private $_instance = null;
 
-	/**
-	 * Summary of canCreate
-	 * @return boolean
-	 */
-	static function canCreate()
-	{
-		return Session::haveRight('config', UPDATE);
-	}
+    /**
+     * Summary of canCreate
+     *
+     * @return boolean
+     */
+    static function canCreate()
+    {
+        return Session::haveRight('config', UPDATE);
+    }
 
-	/**
-	 * Summary of canView
-	 * @return boolean
-	 */
-	static function canView()
-	{
-		return Session::haveRight('config', READ);
-	}
+    /**
+     * Summary of canView
+     *
+     * @return boolean
+     */
+    static function canView()
+    {
+        return Session::haveRight('config', READ);
+    }
 
-	/**
-	 * Summary of canUpdate
-	 * @return boolean
-	 */
-	static function canUpdate()
-	{
-		return Session::haveRight('config', UPDATE);
-	}
+    /**
+     * Summary of canUpdate
+     *
+     * @return boolean
+     */
+    static function canUpdate()
+    {
+        return Session::haveRight('config', UPDATE);
+    }
 
-	/**
-	 * Summary of getTypeName
-	 * @param mixed $nb plural
-	 * @return mixed
-	 */
-	static function getTypeName($nb = 0)
-	{
-		return __('Gdrive setup', 'gdrive');
-	}
+    /**
+     * Summary of getTypeName
+     *
+     * @param  mixed $nb plural
+     * @return mixed
+     */
+    static function getTypeName($nb = 0)
+    {
+        return __('Gdrive setup', 'gdrive');
+    }
 
-	/**
-	 * Summary of getName
-	 * @param mixed $with_comment with comment
-	 * @return mixed
-	 */
-	function getName($with_comment = 0)
-	{
-		return 'Gdrive';
-	}
+    /**
+     * Summary of getName
+     *
+     * @param  mixed $with_comment with comment
+     * @return mixed
+     */
+    function getName($with_comment = 0)
+    {
+        return 'Gdrive';
+    }
 
-	/**
-	 * Summary of getInstance
-	 * @return PluginGdriveConfig
-	 */
-	static function getInstance()
-	{
+    /**
+     * Summary of getInstance
+     *
+     * @return PluginGdriveConfig
+     */
+    static function getInstance()
+    {
 
-		if (!isset(self::$_instance)) {
-			self::$_instance = new self();
-			if (!self::$_instance->getFromDB(1)) {
-				self::$_instance->getEmpty();
-			}
-		}
-		return self::$_instance;
-	}
+        if (!isset(self::$_instance)) {
+            self::$_instance = new self();
+            if (!self::$_instance->getFromDB(1)) {
+                self::$_instance->getEmpty();
+            }
+        }
+        return self::$_instance;
+    }
 
-	static function getConfig()
-	{
-		$config = new self();
-		$config->getFromDB(1);
-		return $config;
-	}
+    /**
+     * Summary of getConfig
+     *
+     * @return PluginGdriveConfig
+     */
+    static function getConfig()
+    {
+        $config = new self();
+        $config->getFromDB(1);
+        return $config;
+    }
 
-	/**
-	 * Summary of showConfigForm
-	 * @param mixed $item is the config
-	 * @return boolean
-	 */
-	static function showConfigForm($item)
-	{
-		$config = self::getInstance();
-		$options = [
-			'full_width' => true
-		];
+    /**
+     * Summary of showConfigForm
+     *
+     * @param  mixed $item is the config
+     * @return boolean
+     */
+    static function showConfigForm($item)
+    {
+        $config = self::getInstance();
+        $options = [
+        'full_width' => true
+        ];
 
-		$templatePath = "@gdrive/config.html.twig";
-		TemplateRenderer::getInstance()->display(
-			$templatePath,
-			[
-				'item' => $config,
-				'options' => $options,
-			]
-		);
+        $templatePath = "@gdrive/config.html.twig";
+        TemplateRenderer::getInstance()->display(
+            $templatePath,
+            [
+            'item' => $config,
+            'options' => $options,
+            ]
+        );
 
-		return false;
-	}
+        return false;
+    }
 
-	function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
-	{
+    /**
+     * Summary of getTabNameForItem
+     *
+     * @param  CommonGLPI $item
+     * @param  mixed      $withtemplate
+     * @return string
+     */
+    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
 
-		if ($item->getType() == 'Config') {
-			return __('GDrive', 'gdrive');
-		}
-		return '';
-	}
+        if ($item->getType() == 'Config') {
+            return __('GDrive', 'gdrive');
+        }
+        return '';
+    }
 
-	static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
-	{
+    /**
+     * Summary of displayTabContentForItem
+     *
+     * @param  CommonGLPI $item
+     * @param  mixed      $tabnum
+     * @param  mixed      $withtemplate
+     * @return bool
+     */
+    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
 
-		if ($item->getType() == 'Config') {
-			self::showConfigForm($item);
-		}
-		return true;
-	}
+        if ($item->getType() == 'Config') {
+            self::showConfigForm($item);
+        }
+        return true;
+    }
 }

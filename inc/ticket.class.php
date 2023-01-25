@@ -1,8 +1,8 @@
 <?php
-/*
+/**
 -------------------------------------------------------------------------
 Gdrive plugin for GLPI
-Copyright (C) 2018 by the TICgal Team.
+Copyright (C) 2023 by the TICgal Team.
 https://github.com/pluginsGLPI/gdrive
 -------------------------------------------------------------------------
 LICENSE
@@ -18,101 +18,135 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Gdrive. If not, see <http://www.gnu.org/licenses/>.
 --------------------------------------------------------------------------
-@package   gdrive
+ *
+@package   Gdrive
 @author    the TICgal team
-@copyright Copyright (c) 2018 TICgal team
+@copyright Copyright (c) 2023 TICgal team
 @license   AGPL License 3.0 or (at your option) any later version
 http://www.gnu.org/licenses/agpl-3.0-standalone.html
 @link      https://tic.gal
 @since     2018
----------------------------------------------------------------------- */
+---------------------------------------------------------------------- 
+ */
 if (!defined('GLPI_ROOT')) {
-	die("Sorry. You can't access directly to this file");
+    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Summary of PluginGdriveTicket
+ */
 class PluginGdriveTicket extends CommonDBTM
 {
 
-	public static $rightname = 'ticket';
+    public static $rightname = 'ticket';
 
-	static function getTypeName($nb = 0)
-	{
-		return 'GDrive';
-	}
+    /**
+     * Summary of getTypeName
+     *
+     * @param  mixed $nb
+     * @return string
+     */
+    static function getTypeName($nb = 0)
+    {
+        return 'GDrive';
+    }
 
-	public static function getIcon()
-	{
-		return "fa-brands fa-google-drive fa-rotate-180";
-	}
+    /**
+     * Summary of getIcon
+     *
+     * @return string
+     */
+    public static function getIcon()
+    {
+        return "fa-brands fa-google-drive fa-rotate-180";
+    }
 
-	static public function postForm($params)
-	{
-		global $CFG_GLPI;
-		$item = $params['item'];
-		$config = PluginGdriveConfig::getConfig();
+    /**
+     * Summary of postForm
+     *
+     * @param  mixed $params
+     * @return void
+     */
+    static public function postForm($params)
+    {
+        global $CFG_GLPI;
+        $item = $params['item'];
+        $config = PluginGdriveConfig::getConfig();
 
-		switch ($item->getType()) {
-			//case 'Ticket':
-			case 'ITILFollowup':
-			case 'ITILSolution':
-			case 'Document_Item':
-			case 'TicketTask':
-			case 'ProblemTask':
-			case 'ChangeTask':
-			case 'TicketValidation':
-			case 'ChangeValidation':
-				echo self::addGdriveScripts($config);
-				echo self::addGdriveButton($config);
-				break;
-		}
-	}
+        switch ($item->getType()) {
+         //case 'Ticket':
+        case 'ITILFollowup':
+        case 'ITILSolution':
+        case 'Document_Item':
+        case 'TicketTask':
+        case 'ProblemTask':
+        case 'ChangeTask':
+        case 'TicketValidation':
+        case 'ChangeValidation':
+            echo self::addGdriveScripts($config);
+            echo self::addGdriveButton($config);
+            break;
+        }
+    }
 
-	static public function postTab($params)
-	{
-		global $CFG_GLPI;
-		$item = $params['item'];
-		$itemtype = $params['options']['itemtype'];
-		$config = PluginGdriveConfig::getConfig();
+    /**
+     * Summary of postTab
+     *
+     * @param  mixed $params
+     * @return void
+     */
+    static public function postTab($params)
+    {
+        global $CFG_GLPI;
+        $item = $params['item'];
+        $itemtype = $params['options']['itemtype'];
+        $config = PluginGdriveConfig::getConfig();
 
-		switch ($item->getType()) {
-			case 'Computer':
-			case 'Monitor':
-			case 'Software':
-			case 'NetworkEquipment':
-			case 'Peripheral':
-			case 'Printer':
-			case 'CartridgeItem':
-			case 'ConsumableItem':
-			case 'Phone':
-			case 'Rack':
-			case 'Enclosure':
-			case 'PDU':
-			case 'PassiveDCEquipment':
-			//case 'Unmanaged':
-			//case 'Cable':
-			case 'Item_DeviceSimcard':
-				if ($itemtype == 'Document_Item') {
-					echo '<script type="text/javascript" src="/public/lib/tinymce.min.js"></script>';
-					echo self::addGdriveScripts($config);
-					echo self::addGdriveButton($config);
+        switch ($item->getType()) {
+        case 'Computer':
+        case 'Monitor':
+        case 'Software':
+        case 'NetworkEquipment':
+        case 'Peripheral':
+        case 'Printer':
+        case 'CartridgeItem':
+        case 'ConsumableItem':
+        case 'Phone':
+        case 'Rack':
+        case 'Enclosure':
+        case 'PDU':
+        case 'PassiveDCEquipment':
+            //case 'Unmanaged':
+            //case 'Cable':
+        case 'Item_DeviceSimcard':
+            if ($itemtype == 'Document_Item') {
+                echo '<script type="text/javascript" src="/public/lib/tinymce.min.js"></script>';
+                echo self::addGdriveScripts($config);
+                echo self::addGdriveButton($config);
 
-					$out = '<script>
+                $out = '<script>
 					var btnExist = $("#gdrivebtn");
 					$(".firstbloc").append(btnExist);
 					</script>';
 
-					echo $out;
-				}
-				break;
-		}
-	}
+                echo $out;
+            }
+            break;
+        }
+    }
 
-	public static function addGdriveScripts($config)
-	{
-		$out = '';
-		$out .= '<script src="https://accounts.google.com/gsi/client" async defer></script>';
+    /**
+     * Summary of addGdriveScripts
+     *
+     * @param  mixed $config
+     * @return string
+     */
+    public static function addGdriveScripts($config)
+    {
+        $out = '';
+        $out .= '<script src="https://accounts.google.com/gsi/client" async defer></script>';
 
-		$out .= "<script type='text/javascript'>
+        $out .= "<script type='text/javascript'>
 				// The Browser API key obtained from the Google API Console.
 				// Replace with your own Browser API key, or your own key.
 				var developerKey = '" . $config->fields['developer_key'] . "';
@@ -305,23 +339,29 @@ class PluginGdriveTicket extends CommonDBTM
 
 				</script>";
 
-		$out .= '<script async defer src="https://apis.google.com/js/api.js"></script>';
+        $out .= '<script async defer src="https://apis.google.com/js/api.js"></script>';
 
-		return $out;
-	}
+        return $out;
+    }
 
-	public static function addGdriveButton($config)
-	{
-		$out = '';
+    /**
+     * Summary of addGdriveButton
+     *
+     * @param  mixed $config
+     * @return string
+     */
+    public static function addGdriveButton($config)
+    {
+        $out = '';
 
-		$out .= "<div class='d-flex flex-column' id='gdrivebtn'>";
+        $out .= "<div class='d-flex flex-column' id='gdrivebtn'>";
 
-		$out .= "<tr><th colspan='2'><div class='d-flex'>
+        $out .= "<tr><th colspan='2'><div class='d-flex'>
 			<span class='mb-1'><i class='" . self::getIcon() . "'></i> " . self::getTypeName(2) . "</span>
 			<div class='mb-1 ms-1' id='result'></div>
 			</div></th></tr>";
-		$out .= "<tr><td align='center'><div class='d-flex align-items-stretch mb-1'>";
-		$out .= '<div id="g_id_onload"
+        $out .= "<tr><td align='center'><div class='d-flex align-items-stretch mb-1'>";
+        $out .= '<div id="g_id_onload"
 					data-client_id="' . $config->fields['client_id'] . '"
 					data-context="signin"
 					data-auto_prompt="false"
@@ -337,11 +377,11 @@ class PluginGdriveTicket extends CommonDBTM
 					data-size="large"
 					data-logo_alignment="left">
 				</div>';
-		$out .= "<button type='button' class='btn authbtn flex-grow-1' id='auth' disabled>" . __('Select file', 'gdrive') . "</button>";
-		$out .= "</div></td></tr>";
+        $out .= "<button type='button' class='btn authbtn flex-grow-1' id='auth' disabled>" . __('Select file', 'gdrive') . "</button>";
+        $out .= "</div></td></tr>";
 
-		$out .= '</div>';
+        $out .= '</div>';
 
-		return $out;
-	}
+        return $out;
+    }
 }

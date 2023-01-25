@@ -29,7 +29,7 @@ http://www.gnu.org/licenses/agpl-3.0-standalone.html
 */
 use Glpi\Plugins;
 
-define('PLUGIN_GDRIVE_VERSION', '2.0.0.alpha.1');
+define('PLUGIN_GDRIVE_VERSION', '2.0.0');
 define("PLUGIN_GDRIVE_MIN_GLPI_VERSION", "10.0.0");
 define("PLUGIN_GDRIVE_MAX_GLPI_VERSION", "10.0.99");
 
