@@ -1,8 +1,8 @@
 <?php
-/*
+/**
 -------------------------------------------------------------------------
 Gdrive plugin for GLPI
-Copyright (C) 2018 by the TICgal Team.
+Copyright (C) 2023 by the TICgal Team.
 https://github.com/pluginsGLPI/gdrive
 -------------------------------------------------------------------------
 LICENSE
@@ -18,101 +18,135 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Gdrive. If not, see <http://www.gnu.org/licenses/>.
 --------------------------------------------------------------------------
-@package   gdrive
+ *
+@package   Gdrive
 @author    the TICgal team
-@copyright Copyright (c) 2018 TICgal team
+@copyright Copyright (c) 2023 TICgal team
 @license   AGPL License 3.0 or (at your option) any later version
 http://www.gnu.org/licenses/agpl-3.0-standalone.html
 @link      https://tic.gal
 @since     2018
----------------------------------------------------------------------- */
+---------------------------------------------------------------------- 
+ */
 if (!defined('GLPI_ROOT')) {
-	die("Sorry. You can't access directly to this file");
+    die("Sorry. You can't access directly to this file");
 }
 
+/**
+ * Summary of PluginGdriveTicket
+ */
 class PluginGdriveTicket extends CommonDBTM
 {
 
-	public static $rightname = 'ticket';
+    public static $rightname = 'ticket';
 
-	static function getTypeName($nb = 0)
-	{
-		return 'GDrive';
-	}
+    /**
+     * Summary of getTypeName
+     *
+     * @param  mixed $nb
+     * @return string
+     */
+    static function getTypeName($nb = 0)
+    {
+        return 'GDrive';
+    }
 
-	public static function getIcon()
-	{
-		return "fa-brands fa-google-drive fa-rotate-180";
-	}
+    /**
+     * Summary of getIcon
+     *
+     * @return string
+     */
+    public static function getIcon()
+    {
+        return "fa-brands fa-google-drive fa-rotate-180";
+    }
 
-	static public function postForm($params)
-	{
-		global $CFG_GLPI;
-		$item = $params['item'];
-		$config = PluginGdriveConfig::getConfig();
+    /**
+     * Summary of postForm
+     *
+     * @param  mixed $params
+     * @return void
+     */
+    static public function postForm($params)
+    {
+        global $CFG_GLPI;
+        $item = $params['item'];
+        $config = PluginGdriveConfig::getConfig();
 
-		switch ($item->getType()) {
-			//case 'Ticket':
-			case 'ITILFollowup':
-			case 'ITILSolution':
-			case 'Document_Item':
-			case 'TicketTask':
-			case 'ProblemTask':
-			case 'ChangeTask':
-			case 'TicketValidation':
-			case 'ChangeValidation':
-				echo self::addGdriveScripts($config);
-				echo self::addGdriveButton();
-				break;
-		}
-	}
+        switch ($item->getType()) {
+         //case 'Ticket':
+        case 'ITILFollowup':
+        case 'ITILSolution':
+        case 'Document_Item':
+        case 'TicketTask':
+        case 'ProblemTask':
+        case 'ChangeTask':
+        case 'TicketValidation':
+        case 'ChangeValidation':
+            echo self::addGdriveScripts($config);
+            echo self::addGdriveButton($config);
+            break;
+        }
+    }
 
-	static public function postTab($params)
-	{
-		global $CFG_GLPI;
-		$item = $params['item'];
-		$itemtype = $params['options']['itemtype'];
-		$config = PluginGdriveConfig::getConfig();
+    /**
+     * Summary of postTab
+     *
+     * @param  mixed $params
+     * @return void
+     */
+    static public function postTab($params)
+    {
+        global $CFG_GLPI;
+        $item = $params['item'];
+        $itemtype = $params['options']['itemtype'];
+        $config = PluginGdriveConfig::getConfig();
 
-		switch ($item->getType()) {
-			case 'Computer':
-			case 'Monitor':
-			case 'Software':
-			case 'NetworkEquipment':
-			case 'Peripheral':
-			case 'Printer':
-			case 'CartridgeItem':
-			case 'ConsumableItem':
-			case 'Phone':
-			case 'Rack':
-			case 'Enclosure':
-			case 'PDU':
-			case 'PassiveDCEquipment':
-			//case 'Unmanaged':
-			//case 'Cable':
-			case 'Item_DeviceSimcard':
-				if ($itemtype == 'Document_Item') {
-					echo self::addGdriveScripts($config);
-					echo '<script type="text/javascript" src="/public/lib/tinymce.min.js"></script>';
-					echo self::addGdriveButton();
+        switch ($item->getType()) {
+        case 'Computer':
+        case 'Monitor':
+        case 'Software':
+        case 'NetworkEquipment':
+        case 'Peripheral':
+        case 'Printer':
+        case 'CartridgeItem':
+        case 'ConsumableItem':
+        case 'Phone':
+        case 'Rack':
+        case 'Enclosure':
+        case 'PDU':
+        case 'PassiveDCEquipment':
+            //case 'Unmanaged':
+            //case 'Cable':
+        case 'Item_DeviceSimcard':
+            if ($itemtype == 'Document_Item') {
+                echo '<script type="text/javascript" src="/public/lib/tinymce.min.js"></script>';
+                echo self::addGdriveScripts($config);
+                echo self::addGdriveButton($config);
 
-					$out = '<script>
+                $out = '<script>
 					var btnExist = $("#gdrivebtn");
 					$(".firstbloc").append(btnExist);
 					</script>';
 
-					echo $out;
-				}
-				break;
-		}
-	}
+                echo $out;
+            }
+            break;
+        }
+    }
 
-	public static function addGdriveScripts($config)
-	{
-		$out = '';
-		$out .= '<script src="https://accounts.google.com/gsi/client" async defer></script>';
+    /**
+     * Summary of addGdriveScripts
+     *
+     * @param  mixed $config
+     * @return string
+     */
+    public static function addGdriveScripts($config)
+    {
+        $out = '';
+        $out .= '<script src="https://accounts.google.com/gsi/client" async defer></script>';
 
-		$out .= "<script type='text/javascript'>
+        $out .= "<script type='text/javascript'>
 				// The Browser API key obtained from the Google API Console.
 				// Replace with your own Browser API key, or your own key.
 				var developerKey = '" . $config->fields['developer_key'] . "';
@@ -124,19 +158,32 @@ class PluginGdriveTicket extends CommonDBTM
 				// See 'Project number' under 'IAM & Admin' > 'Settings'
 				var appId = '" . $config->fields['app_id'] . "';
 
-				// No longer an array
-				// var scope = ['https://www.googleapis.com/auth/drive'];
-				// Scope: View and download Google Drive files
+				// Scope: See and download Google Drive files
 				var scope = 'https://www.googleapis.com/auth/drive.readonly';
 
-				var client;
-				var oauthToken;
-				var pickerApiLoaded = false;
+				var tokenClient;
+				var access_token;
+				var pickerInited = false;
 				var idEditor = 0;
 
-				// Also known as TokenClient
-				function initClient(){
-					client = google.accounts.oauth2.initTokenClient({
+				// Use the Google API Loader script to load the google.picker script.
+				function loadPicker() {
+					gapi.load('client', {'callback': initClient});
+					gapi.load('picker', {'callback': initializePicker});
+					enableButtons();
+				}
+
+				/**
+				 * Callback after the API client is loaded. Loads the
+				 * discovery doc to initialize the API.
+				 */
+				async function initializePicker() {
+					await gapi.client.load('https://www.googleapis.com/discovery/v1/apis/drive/v3/rest');
+					pickerInited = true;
+				}
+
+				async function initClient(){
+					tokenClient = google.accounts.oauth2.initTokenClient({
 						client_id: clientId,
 						scope: scope,
 						prompt: '',
@@ -146,22 +193,34 @@ class PluginGdriveTicket extends CommonDBTM
 					});
 				}
 
+				function handleAuthResult(authResult) {
+					if (authResult && !authResult.error) {
+						access_token = authResult.access_token;
+						document.cookie='access_token='+access_token;
+						createPicker();
+					}else{
+						if(authResult.error=='popup_closed_by_user'){
+							access_token=getCookie('access_token');
+							createPicker();
+						}else{
+							alert(authResult.error);
+						}
+					}
+				}
+
 				function getToken(){
-					client.requestAccessToken();
+					tokenClient.requestAccessToken();
 				}
 
-				// Use the Google API Loader script to load the google.picker script.
-				function loadPicker() {
-					gapi.load('auth', {'callback': onAuthApiLoad});
-					gapi.load('picker', {'callback': onPickerApiLoad});
+				function revokeToken() {
+					google.accounts.oauth2.revoke(access_token, () => {console.log('access token revoked')});
 				}
 
-				function onAuthApiLoad() {
-					//var authBtn = document.getElementById('auth');
+				function enableButtons() {
 					var authBtns = $('.authbtn');
 
 					for (let btn of authBtns) {
-						var form = btn.parentElement.parentElement;
+						var form = btn.parentElement.parentElement.parentElement;
 						var inputs = form.getElementsByTagName('input');
 						var fileupload;
 						for(var input of inputs){
@@ -175,28 +234,8 @@ class PluginGdriveTicket extends CommonDBTM
 						btn.value = fileupload;
 						btn.addEventListener('click', function() {
 							idEditor = btn.value;
-							initClient();
 							getToken();
 						});
-					}
-				}
-
-				function onPickerApiLoad() {
-					pickerApiLoaded = true;
-				}
-
-				function handleAuthResult(authResult) {
-					if (authResult && !authResult.error) {
-						oauthToken = authResult.access_token;
-						document.cookie='access_token='+oauthToken;
-						createPicker();
-					}else{
-						if(authResult.error=='popup_closed_by_user'){
-							oauthToken=getCookie('access_token');
-							createPicker();
-						}else{
-							alert(authResult.error);
-						}
 					}
 				}
 
@@ -223,7 +262,7 @@ class PluginGdriveTicket extends CommonDBTM
 					.enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
 					.setAppId(appId)
 					.addView(google.picker.ViewId.DOCS)
-					.setOAuthToken(oauthToken)
+					.setOAuthToken(access_token)
 					.setDeveloperKey(developerKey)
 					.setCallback(pickerCallback)
 					.build();
@@ -249,7 +288,7 @@ class PluginGdriveTicket extends CommonDBTM
 								if(data==false){
 									message='" . __('Error loading the file', 'gdrive') . "';
 								} else {
-									document.getElementById('result').innerHTML = message;
+									document.getElementById('result').innerHTML = ' - ' + message;
 								}
 							});
 						}
@@ -258,7 +297,7 @@ class PluginGdriveTicket extends CommonDBTM
 
 				function downloadFile(file, fileInput, callback){
 					if (file[google.picker.Document.URL]) {
-						var accessToken = oauthToken;
+						var accessToken = access_token;
 						var xhr = new XMLHttpRequest();
 						xhr.responseType = 'blob';
 						xhr.open('GET', 'https://www.googleapis.com/drive/v3/files/'+file[google.picker.Document.ID]+'?alt=media');
@@ -280,22 +319,69 @@ class PluginGdriveTicket extends CommonDBTM
 						callback(false);
 					}
 				}
+
+				function handleCredentialResponse(response) {
+					const responsePayload = decodeResponse(response.credential);
+					if(responsePayload.sub){
+						loadPicker();
+					}
+				}
+				
+				function decodeResponse (token) {
+					var base64Url = token.split('.')[1];
+					var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+					var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+						return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+					}).join(''));
+
+					return JSON.parse(jsonPayload);
+				}
+
 				</script>";
 
-		$out .= '<script type="text/javascript" src="https://apis.google.com/js/client.js?onload=loadPicker"></script>';
+        $out .= '<script async defer src="https://apis.google.com/js/api.js"></script>';
 
-		return $out;
-	}
+        return $out;
+    }
 
-	public static function addGdriveButton()
-	{
-		$out = '';
+    /**
+     * Summary of addGdriveButton
+     *
+     * @param  mixed $config
+     * @return string
+     */
+    public static function addGdriveButton($config)
+    {
+        $out = '';
 
-		$out .= "<div class='d-flex flex-column mx-3' id='gdrivebtn'>";
-		$out .= "<tr><th colspan='2'><span class='mb-1'><i class='" . self::getIcon() . "'></i> " . self::getTypeName(2) . "</span></th></tr>";
-		$out .= "<tr><td align='center'><button type='button' class='btn mb-1 authbtn' id='auth' disabled>" . __('Select file', 'gdrive') . "</button>	<div class='mb-1' id='result'></div></td></tr>";
-		$out .= '</div>';
+        $out .= "<div class='d-flex flex-column' id='gdrivebtn'>";
 
-		return $out;
-	}
+        $out .= "<tr><th colspan='2'><div class='d-flex'>
+			<span class='mb-1'><i class='" . self::getIcon() . "'></i> " . self::getTypeName(2) . "</span>
+			<div class='mb-1 ms-1' id='result'></div>
+			</div></th></tr>";
+        $out .= "<tr><td align='center'><div class='d-flex align-items-stretch mb-1'>";
+        $out .= '<div id="g_id_onload"
+					data-client_id="' . $config->fields['client_id'] . '"
+					data-context="signin"
+					data-auto_prompt="false"
+					data-ux_mode="popup"
+					data-callback="handleCredentialResponse">
+				</div>
+				<div class="g_id_signin" 
+					data-type="standard"
+					data-type="standard"
+					data-shape="rectangular"
+					data-theme="outline"
+					data-text="signin_with"
+					data-size="large"
+					data-logo_alignment="left">
+				</div>';
+        $out .= "<button type='button' class='btn authbtn flex-grow-1' id='auth' disabled>" . __('Select file', 'gdrive') . "</button>";
+        $out .= "</div></td></tr>";
+
+        $out .= '</div>';
+
+        return $out;
+    }
 }

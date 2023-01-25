@@ -1,8 +1,9 @@
 # GDrive - GLPI Plugin CHANGELOG
 
-## 2.0.0 - 2023-01-05
+## 2.0.0 - 2023-01-20
 ### Features
 - Compatibility with GLPI 10 (#12836)
+- Sign in with Google Authentication & Authorization (#13177)
 - GDrive button on Assets > Documents (#12937)
 - GDrive for Tickets, Problems and Changes
 - Translation with Localazy
