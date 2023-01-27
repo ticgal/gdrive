@@ -6,7 +6,7 @@
 - Sign in with Google Authentication & Authorization (#13177)
 - GDrive button on Assets > Documents (#12937)
 - GDrive for Tickets, Problems and Changes
-- Translation with Localazy
+- Translation with Localazy, including Polish (#13373)
 
 ## 1.3.0 - 2020-07-31
 ### Features
