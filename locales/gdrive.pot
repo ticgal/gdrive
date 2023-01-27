@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-10 09:30+0100\n"
+"POT-Creation-Date: 2023-01-27 10:25+0100\n"
 "PO-Revision-Date: 2023-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,23 +17,23 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: inc/config.class.php:74
+#: inc/config.class.php:82
 msgid "Gdrive setup"
 msgstr ""
 
-#: inc/config.class.php:138
+#: inc/config.class.php:161
 msgid "GDrive"
 msgstr ""
 
-#: inc/ticket.class.php:229
+#: inc/ticket.class.php:282
 msgid "Uploaded file"
 msgstr ""
 
-#: inc/ticket.class.php:236
+#: inc/ticket.class.php:289
 msgid "Error loading the file"
 msgstr ""
 
-#: inc/ticket.class.php:282
+#: inc/ticket.class.php:380
 msgid "Select file"
 msgstr ""
 
