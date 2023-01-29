@@ -1,28 +1,22 @@
-# GDrive GLPI plugin
+# Gdrive
 
-<img src="gdrive.png" alt="GDrive Logo" height="250px" width="250px" class="js-lazy-loaded">
+<img src="https://raw.githubusercontent.com/ticgal/gdrive/multimedia/gdrive.png" alt="GDrive Logo" height="250px" width="250px" class="js-lazy-loaded">
 
-[![License](https://img.shields.io/badge/License-GNU%20AGPLv3-blue.svg?style=flat-square)](https://github.com/ticgal/GDrive/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/License-GNU%20AGPLv3-blue.svg?style=flat-square)](https://github.com/ticgal/actualtime/blob/master/LICENSE)
 [![Twitter](https://img.shields.io/badge/Twitter-TICgal-blue.svg?style=flat-square)](https://twitter.com/ticgalcom)
-[![Web](https://img.shields.io/badge/Web-TICgal-blue.svg?style=flat-square)](https://tic.gal/)
+[![Web](https://img.shields.io/badge/Web-TICgal-blue.svg?style=flat-square)](https://tic.gal/en/project/gdrive-integration-glpi-google-drive/)
+[![Localazy](https://img.shields.io/badge/Translate-Localazy-cyan)](https://localazy.com/p/gdrive#translations)
 
-## English
-This plugin allows you to download a file from Drive directly to a ticket.
-Check out the wiki for setup instructions: https://github.com/ticgal/GDrive/wiki/GDrive-Setup
+Gdrive is Google Drive integration plugin for GLPI. 
+You can transfer files from the Google storage to most of the GLPI Assets.
 
-**Google API** requests an **https** URI
-
-Want to contribute with a translation? https://github.com/ticgal/GDrive/edit/master/.github/CONTRIBUTING.md
-
-## Galego
-Este módulo permite descargar un ficheiro de Google Drive directamente a unha petición. 
-Instrucción de configuración na wiki: https://github.com/ticgal/GDrive/wiki/GDrive-Setup
-
-A **API de Google** precisa unha URI **https**
-
-## Español
-Este plugin permite descargar un archivo de Drive directamente a una peticion
-Instrucciones de configuración en la wiki: https://github.com/ticgal/GDrive/wiki/GDrive-Setup
-
-
-La **API de Google** necesita una URI **https**
+### Setup
+Install like any other GLPI plugin from Marketplace or download and install in the plugin folder.
+You will additionally need to a Google Drive token. Please refer to the official documentation to get a token.
+### How to use
+Nice and easy:
+1. Click on the Gdrive button
+2. Select one or more files
+3. Get them added to GLPI
+### Translate
+Please, click on the Localazy badge to translate it into your language. We will add it on Gdrive next release. 
