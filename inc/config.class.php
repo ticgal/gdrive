@@ -41,14 +41,9 @@ class PluginGdriveConfig extends CommonDBTM
 
     private static $instance = null;
 
-    /**
-     * getIcon
-     *
-     * @return string
-     */
-    public static function getIcon(): string
+    public static function getIcon()
     {
-        return "fa-brands fa-google-drive fa-rotate-180";
+        return "ti ti-brand-google-drive";
     }
 
     /**
@@ -59,7 +54,7 @@ class PluginGdriveConfig extends CommonDBTM
      */
     public static function getTypeName($nb = 0): string
     {
-        return __('Gdrive setup', 'gdrive');
+        return __('GDrive', 'gdrive');
     }
 
     /**
@@ -135,7 +130,7 @@ class PluginGdriveConfig extends CommonDBTM
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): string
     {
         if ($item->getType() == 'Config') {
-            return 'GDrive';
+            return self::createTabEntry(self::getTypeName());
         }
 
         return '';
