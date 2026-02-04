@@ -1,4 +1,7 @@
 # GDrive - GLPI Plugin CHANGELOG
+## 3.0.0 - 2026-02-04
+## Added
+- GLPI 11 support
 
 ## 2.0.0 - 2023-01-20
 ### Features

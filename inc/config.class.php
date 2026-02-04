@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * Gdrive plugin for GLPI
- * Copyright (C) 2024 by the TICgal Team.
+ * Copyright (C) 2026 by the TICGAL Team.
  * https://github.com/pluginsGLPI/gdrive
  * -------------------------------------------------------------------------
  * LICENSE
@@ -20,8 +20,8 @@
  * along with Gdrive. If not, see <http://www.gnu.org/licenses/>.
  * --------------------------------------------------------------------------
  * @package   gdrive
- * @author    the TICgal team
- * @copyright Copyright (c) 2018-2024 TICgal team
+ * @author    the TICGAL team
+ * @copyright Copyright (c) 2018-2026 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  * http://www.gnu.org/licenses/agpl-3.0-standalone.html
  * @link      https://tic.gal
@@ -40,6 +40,16 @@ class PluginGdriveConfig extends CommonDBTM
     public static $rightname = 'config';
 
     private static $instance = null;
+
+    /**
+     * getIcon
+     *
+     * @return string
+     */
+    public static function getIcon(): string
+    {
+        return "fa-brands fa-google-drive fa-rotate-180";
+    }
 
     /**
      * getTypeName
@@ -173,9 +183,9 @@ class PluginGdriveConfig extends CommonDBTM
                 `client_id` VARCHAR(250) NOT NULL DEFAULT '1234567890-abcdef.apps.googleusercontent.com',
                 `app_id` VARCHAR(50) NOT NULL DEFAULT '1234567890',
                 PRIMARY KEY (`id`)
-			)ENGINE=InnoDB DEFAULT CHARSET={$default_charset}
-            COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
-            $DB->request($query) or die($DB->error());
+			)ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+            
+            $DB->doQuery($query);
 
             // Default config
             $DB->insert($table, ['id' => 1]);
