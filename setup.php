@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * Gdrive plugin for GLPI
- * Copyright (C) 2024 by the TICgal Team.
+ * Copyright (C) 2026 by the TICgal Team.
  * https://github.com/pluginsGLPI/gdrive
  * -------------------------------------------------------------------------
  * LICENSE
@@ -21,7 +21,7 @@
  * --------------------------------------------------------------------------
  * @package   gdrive
  * @author    the TICgal team
- * @copyright Copyright (c) 2018-2024 TICgal team
+ * @copyright Copyright (c) 2018-2026 TICgal team
  * @license   AGPL License 3.0 or (at your option) any later version
  * http://www.gnu.org/licenses/agpl-3.0-standalone.html
  * @link      https://tic.gal
@@ -31,9 +31,9 @@
 
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_GDRIVE_VERSION', '2.0.0');
-define("PLUGIN_GDRIVE_MIN_GLPI_VERSION", "10.0.0");
-define("PLUGIN_GDRIVE_MAX_GLPI_VERSION", "10.0.99");
+define('PLUGIN_GDRIVE_VERSION', '3.0.0-beta1');
+define("PLUGIN_GDRIVE_MIN_GLPI_VERSION", "11.0");
+define("PLUGIN_GDRIVE_MAX_GLPI_VERSION", "12.0");
 
 /**
  * plugin_version_gdrive
@@ -71,8 +71,6 @@ function plugin_init_gdrive(): void
         Plugin::registerClass(PluginGdriveConfig::class, ['addtabon' => 'Config']);
         $PLUGIN_HOOKS['config_page']['gdrive'] = 'front/config.form.php';
     }
-
-    $PLUGIN_HOOKS[Hooks::CSRF_COMPLIANT]['gdrive'] = true;
 
     $PLUGIN_HOOKS[Hooks::POST_ITEM_FORM]['gdrive'] = [PluginGdriveTicket::class, 'postForm'];
 
