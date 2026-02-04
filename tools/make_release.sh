@@ -78,7 +78,7 @@ rm -rf locales/localazy*
 
 echo "Creating tarball"
 cd ..
-tar czf "glpi-$PLUGINNAME-$RELEASE.tar.bz2" $PLUGINNAME
+tar cjf "glpi-$PLUGINNAME-$RELEASE.tar.bz2" $PLUGINNAME
 
 cd $INIT_PWD;
 
