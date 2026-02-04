@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * Gdrive plugin for GLPI
- * Copyright (C) 2026 by the TICgal Team.
+ * Copyright (C) 2026 by the TICGAL Team.
  * https://github.com/pluginsGLPI/gdrive
  * -------------------------------------------------------------------------
  * LICENSE
@@ -20,8 +20,8 @@
  * along with Gdrive. If not, see <http://www.gnu.org/licenses/>.
  * --------------------------------------------------------------------------
  * @package   gdrive
- * @author    the TICgal team
- * @copyright Copyright (c) 2018-2026 TICgal team
+ * @author    the TICGAL team
+ * @copyright Copyright (c) 2018-2026 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  * http://www.gnu.org/licenses/agpl-3.0-standalone.html
  * @link      https://tic.gal
@@ -45,7 +45,7 @@ function plugin_version_gdrive(): array
     return [
         'name'          => 'GDrive',
         'version'       => PLUGIN_GDRIVE_VERSION,
-        'author'        => '<a href="https://tic.gal">TICgal</a>',
+        'author'        => '<a href="https://tic.gal">TICGAL</a>',
         'homepage'      => 'https://tic.gal/en/project/gdrive-integration-glpi-google-drive/',
         'license'       => 'GPLv3+',
         'requirements'  => [
