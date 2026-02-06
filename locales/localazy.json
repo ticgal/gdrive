@@ -1,0 +1,23 @@
+{
+    "upload": {
+        "type": "pot",
+        "deprecate": "project",
+        "files": [
+            {
+                "pattern": "gdrive.pot",
+                "lang": "en_GB"
+            },
+            {
+                "group": "existing",
+                "file": "gdrive.pot",
+                "pattern": "./*.po",
+                "type": "po",
+                "lang": "${autodetectLang}"
+            }
+        ]
+    },
+    "download": {
+        "files": "${languageCode}_${regionCode}.po",
+        "includeSourceLang": true
+    }
+}

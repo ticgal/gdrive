@@ -1,59 +1,41 @@
-# GDRIVE Glpi Plugin.
-# Copyright (C) 2020 TICgal
-# This file is distributed under the same license as the PACKAGE package.
-# TICgal, 2020
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-24 11:11+0200\n"
-"PO-Revision-Date: 2020-07-24 11:02+0200\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3.1\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Localazy (https://localazy.com)\n"
+"Project-Id-Version: Gdrive\n"
+"Language: es_ES\n"
+"Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
 
-#: inc/config.class.php:72
-msgid "Gdrive setup"
-msgstr "Configuración Gdrive"
-
-#: inc/config.class.php:81
-msgid "Gdrive"
-msgstr "Gdrive"
-
-#: inc/config.class.php:118
-msgid "The Browser API key obtained from the Google API Console"
-msgstr "Clave de API obtenida de la Consola Google API"
-
-#: inc/config.class.php:123
-msgid "The Client ID obtained from the Google API Console"
-msgstr "IDs de cliente obtenida de la Consola Google API"
-
-#: inc/config.class.php:128
-msgid "See 'Project number' under 'IAM & Admin' > 'Settings'"
-msgstr "Ver 'Número del proyecto' en 'IAM y administración' > 'Configuración'"
-
-#: inc/config.class.php:140 inc/ticket.class.php:47
-msgid "GDrive"
-msgstr "GDrive"
-
-#: inc/ticket.class.php:147
-msgid "Uploaded file"
-msgstr "Archivo cargado"
-
-#: inc/ticket.class.php:154
+#: inc/ticket.class.php:289
 msgid "Error loading the file"
 msgstr "Error al cargar el archivo"
 
-#: inc/ticket.class.php:191
-msgid "Select file Drive"
-msgstr "Selecciona archivo Drive"
+#: inc/config.class.php:161
+msgid "GDrive"
+msgstr "Gdrive"
 
-#: inc/ticket.class.php:193
+#: inc/config.class.php:82
+msgid "Gdrive setup"
+msgstr "Configuración de Gdrive"
+
+#: templates/config.html.twig:72
+msgid "See 'Project number' under 'IAM & Admin' > 'Settings'"
+msgstr "Consulte 'Número de proyecto' en 'IAM y Administración' > 'Configuración'"
+
+#: inc/ticket.class.php:380
 msgid "Select file"
 msgstr "Seleccionar archivo"
+
+#: templates/config.html.twig:54
+msgid "The Browser API key obtained from the Google API Console"
+msgstr "La clave API del navegador obtenida de la consola API de Google"
+
+#: templates/config.html.twig:63
+msgid "The Client ID obtained from the Google API Console"
+msgstr "El ID de cliente obtenido de la Consola API de Google"
+
+#: inc/ticket.class.php:282
+msgid "Uploaded file"
+msgstr "Archivo cargado"

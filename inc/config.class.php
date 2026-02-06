@@ -1,152 +1,189 @@
 <?php
-/*
- -------------------------------------------------------------------------
- Gdrive plugin for GLPI
- Copyright (C) 2018 by the TICgal Team.
 
- https://github.com/pluginsGLPI/gdrive
- -------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * Gdrive plugin for GLPI
+ * Copyright (C) 2026 by the TICGAL Team.
+ * https://github.com/pluginsGLPI/gdrive
+ * -------------------------------------------------------------------------
+ * LICENSE
+ * This file is part of the Gdrive plugin.
+ * Gdrive plugin is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ * Gdrive plugin is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with Gdrive. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
+ * @package   gdrive
+ * @author    the TICGAL team
+ * @copyright Copyright (c) 2018-2026 TICGAL team
+ * @license   AGPL License 3.0 or (at your option) any later version
+ * http://www.gnu.org/licenses/agpl-3.0-standalone.html
+ * @link      https://tic.gal
+ * @since     2018
+ * --------------------------------------------------------------------------
+ */
 
- LICENSE
-
- This file is part of the Gdrive plugin.
-
- Gdrive plugin is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- Gdrive plugin is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with Gdrive. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
- @package   gdrive
- @author    the TICgal team
- @copyright Copyright (c) 2018 TICgal team
- @license   AGPL License 3.0 or (at your option) any later version
-            http://www.gnu.org/licenses/agpl-3.0-standalone.html
- @link      https://tic.gal
- @since     2018
- ---------------------------------------------------------------------- */
 if (!defined('GLPI_ROOT')) {
-	die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
-class PluginGdriveConfig extends CommonDBTM {
-	static private $_instance = NULL;
+use Glpi\Application\View\TemplateRenderer;
 
-	/**
-	* Summary of canCreate
-	* @return boolean
-	*/
-	static function canCreate() {
-		return Session::haveRight('config', UPDATE);
-	}
+class PluginGdriveConfig extends CommonDBTM
+{
+    public static $rightname = 'config';
 
-	/**
-	* Summary of canView
-	* @return boolean
-	*/
-	static function canView() {
-		return Session::haveRight('config', READ);
-	}
+    private static $instance = null;
 
-	/**
-	* Summary of canUpdate
-	* @return boolean
-	*/
-	static function canUpdate() {
-		return Session::haveRight('config', UPDATE);
-	}
+    public static function getIcon()
+    {
+        return "ti ti-brand-google-drive";
+    }
 
-	/**
-	* Summary of getTypeName
-	* @param mixed $nb plural
-	* @return mixed
-	*/
-	static function getTypeName($nb=0) {
-		return __('Gdrive setup','gdrive');
-	}
+    /**
+     * getTypeName
+     *
+     * @param  mixed $nb
+     * @return string
+     */
+    public static function getTypeName($nb = 0): string
+    {
+        return __('GDrive', 'gdrive');
+    }
 
-	/**
-	* Summary of getName
-	* @param mixed $with_comment with comment
-	* @return mixed
-	*/
-	function getName($with_comment=0) {
-		return __('Gdrive','gdrive');
-	}
+    /**
+     * getName
+     *
+     * @param  mixed $with_comment
+     * @return string
+     */
+    public function getName($with_comment = 0): string
+    {
+        return 'Gdrive';
+    }
 
-	/**
-	* Summary of getInstance
-	* @return PluginProcessmakerConfig
-	*/
-	static function getInstance() {
+    /**
+     * getInstance
+     *
+     * @param  mixed $n
+     * @return PluginGdriveConfig
+     */
+    public static function getInstance($n = 1): PluginGdriveConfig
+    {
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
+            if (!self::$instance->getFromDB($n)) {
+                self::$instance->getEmpty();
+            }
+        }
+        return self::$instance;
+    }
 
-		if (!isset(self::$_instance)) {
-			self::$_instance = new self();
-			if (!self::$_instance->getFromDB(1)) {
-				self::$_instance->getEmpty();
-			}
-		}
-		return self::$_instance;
-	}
+    /**
+     * getConfig
+     *
+     * @return PluginGdriveConfig
+     */
+    public static function getConfig(): PluginGdriveConfig
+    {
+        $config = new self();
+        $config->getFromDB(1);
 
-	static function getConfig() {
-		$config = new self();
-		$config->getFromDB(1);
-		return $config;
-	}
+        return $config;
+    }
 
-	/**
-	* Summary of showConfigForm
-	* @param mixed $item is the config
-	* @return boolean
-	*/
-	static function showConfigForm($item) {
-		global $LANG, $CFG_GLPI;
+    /**
+     * showConfigForm
+     *
+     * @param  mixed $item
+     * @return bool
+     */
+    public static function showConfigForm($item): bool
+    {
+        $config = self::getInstance();
+        $options = [
+            'full_width' => true
+        ];
 
-		$config = self::getInstance();
+        $templatePath = "@gdrive/config.html.twig";
+        TemplateRenderer::getInstance()->display($templatePath, [
+            'item'      => $config,
+            'options'   => $options,
+        ]);
 
-		$config->showFormHeader(['colspan' => 4]);
+        return false;
+    }
 
-		echo "<tr class='tab_bg_1'>";
-		echo "<td >".__('The Browser API key obtained from the Google API Console','gdrive')."</td><td >";
-		echo "<input size='50' type='text' name='developer_key' value='".$config->fields['developer_key']."'>";
-		echo "</td></tr>\n";
+    /**
+     * getTabNameForItem
+     *
+     * @param  mixed $item
+     * @param  mixed $withtemplate
+     * @return string
+     */
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): string
+    {
+        if ($item->getType() == 'Config') {
+            return self::createTabEntry(self::getTypeName());
+        }
 
-		echo "<tr class='tab_bg_1'>";
-		echo "<td >".__('The Client ID obtained from the Google API Console','gdrive')."</td><td >";
-		echo "<input size='50' type='text' name='client_id' value='".$config->fields['client_id']."'>";
-		echo "</td></tr>\n";
+        return '';
+    }
 
-		echo "<tr class='tab_bg_1'>";
-		echo "<td >".__("See 'Project number' under 'IAM & Admin' > 'Settings'",'gdrive')."</td><td >";
-		echo "<input type='text' name='app_id' value='".$config->fields['app_id']."'>";
-		echo "</td></tr>\n";
+    /**
+     * displayTabContentForItem
+     *
+     * @param  mixed $item
+     * @param  mixed $tabnum
+     * @param  mixed $withtemplate
+     * @return bool
+     */
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0): bool
+    {
+        if ($item->getType() == 'Config') {
+            self::showConfigForm($item);
+        }
 
-		$config->showFormButtons(array('candel'=>false));
+        return true;
+    }
 
-		return false;
-	}
+    /**
+     * install
+     *
+     * @param  mixed $migration
+     * @return void
+     */
+    public static function install(Migration $migration): void
+    {
+        /** @var \DBMysql $DB */
+        global $DB;
 
-	function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+        $default_charset = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
 
-		if ($item->getType()=='Config') {
-			return __('GDrive','gdrive');
-		}
-		return '';
-	}
+        $table = self::getTable();
+        $table = self::getTable();
+        if (!$DB->tableExists($table)) {
+            $migration->displayMessage("Installing $table");
+            $query = "CREATE TABLE IF NOT EXISTS `$table` (
+                `id` INT {$default_key_sign} NOT NULL AUTO_INCREMENT,
+                `developer_key` VARCHAR(250) NOT NULL DEFAULT 'xxxxxxxYYYYYYYY-12345678',
+                `client_id` VARCHAR(250) NOT NULL DEFAULT '1234567890-abcdef.apps.googleusercontent.com',
+                `app_id` VARCHAR(50) NOT NULL DEFAULT '1234567890',
+                PRIMARY KEY (`id`)
+			)ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+            
+            $DB->doQuery($query);
 
-	static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
-
-		if ($item->getType()=='Config') {
-			self::showConfigForm($item);
-		}
-		return true;
-	}
+            // Default config
+            $DB->insert($table, ['id' => 1]);
+        }
+    }
 }

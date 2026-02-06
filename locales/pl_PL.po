@@ -5,12 +5,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Localazy (https://localazy.com)\n"
 "Project-Id-Version: Gdrive\n"
-"Language: en_GB\n"
-"Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
+"Language: pl_PL\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : ((n%10>=2 && n%10<=4) && ((n%100<12 || n%100>14))) ? 1 : 2;\n"
 
 #: inc/ticket.class.php:289
 msgid "Error loading the file"
-msgstr "Error loading the file"
+msgstr "Błąd ładowania pliku"
 
 #: inc/config.class.php:161
 msgid "GDrive"
@@ -18,24 +18,24 @@ msgstr "GDrive"
 
 #: inc/config.class.php:82
 msgid "Gdrive setup"
-msgstr "Gdrive setup"
+msgstr "Konfiguracja Gdrive"
 
 #: templates/config.html.twig:72
 msgid "See 'Project number' under 'IAM & Admin' > 'Settings'"
-msgstr "See 'Project number' under 'IAM & Admin' > 'Settings'"
+msgstr "Zobacz „Numer projektu” w sekcji „IAM & Admin” > „Ustawienia”"
 
 #: inc/ticket.class.php:380
 msgid "Select file"
-msgstr "Select file"
+msgstr "Wybierz plik"
 
 #: templates/config.html.twig:54
 msgid "The Browser API key obtained from the Google API Console"
-msgstr "The Browser API key obtained from the Google API Console"
+msgstr "Klucz API przeglądarki uzyskany z Google API Console"
 
 #: templates/config.html.twig:63
 msgid "The Client ID obtained from the Google API Console"
-msgstr "The Client ID obtained from the Google API Console"
+msgstr "Identyfikator klienta uzyskany z Google API Console"
 
 #: inc/ticket.class.php:282
 msgid "Uploaded file"
-msgstr "Uploaded file"
+msgstr "Przesłany plik"
