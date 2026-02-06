@@ -19,6 +19,11 @@
    </authors>
    <versions>
       <version>
+         <num>3.0.0</num>
+         <compatibility>~11.0.0</compatibility>
+         <download_url>https://github.com/ticgal/gdrive/releases/download/3.0.0/glpi-gdrive-3.0.0.tar.bz2</download_url>
+      </version>
+      <version>
          <num>2.0.0</num>
          <compatibility>~10.0.0</compatibility>
          <download_url>https://github.com/ticgal/gdrive/releases/download/2.0.0/glpi-gdrive-2.0.0.tar.tgz</download_url>
@@ -49,4 +54,13 @@
          <tag>Helpdesk</tag>
          <tag>Ticket</tag>
          <tag>Google Drive</tag>
-         <tag>Import
+         <tag>Import</tag>
+         <tag>Integration</tag>
+      </en>
+   </tags>
+   <screenshots>
+      <screenshot>https://raw.githubusercontent.com/ticgal/GDrive/multimedia/GLPI-GDrive-Plugin-Screenshot-1.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/ticgal/GDrive/multimedia/GLPI-GDrive-Plugin-Screenshot-2.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/ticgal/GDrive/multimedia/GLPI-GDrive-Plugin-Screenshot-3.png</screenshot>
+   </screenshots>
+</root>
