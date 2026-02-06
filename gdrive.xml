@@ -1,14 +1,13 @@
 <root>
    <name>GDrive</name>
    <key>gdrive</key>
-   <state>stable</state> <!-- stable | unstable | beta | alpha -->
-   <logo>https://github.com/ticgal/GDrive/raw/multimedia/gdrive.png</logo>
+   <state>stable</state> <logo>https://github.com/ticgal/GDrive/raw/multimedia/gdrive.png</logo>
    <description>
       <short>
-		<en>Google Drive plugin for GLPi</en>
+         <en>Google Drive plugin for GLPi</en>
       </short>
       <long>
-	      <en>GDrive allows Google Drive users to add files to every GLPI Item effortlessly.</en>
+         <en>GDrive allows Google Drive users to add files to every GLPI Item effortlessly.</en>
       </long>
    </description>
    <homepage>https://tic.gal/en/project/gdrive-integration-glpi-google-drive/</homepage>
@@ -20,25 +19,25 @@
    </authors>
    <versions>
       <version>
-        <num>2.0.0</num>
-        <compatibility>~10.0.0</compatibility>
-        <download_url>https://github.com/ticgal/gdrive/releases/download/2.0.0/glpi-gdrive-2.0.0.tar.tgz</download_url>
+         <num>2.0.0</num>
+         <compatibility>~10.0.0</compatibility>
+         <download_url>https://github.com/ticgal/gdrive/releases/download/2.0.0/glpi-gdrive-2.0.0.tar.tgz</download_url>
       </version>
       <version>
-	<num>1.3.0</num>
-	<compatibility>~9.5.0</compatibility>
-        <download_url>https://github.com/ticgal/gdrive/releases/download/1.3.0/glpi-gdrive-1.3.0.tar.tgz</download_url>
+         <num>1.3.0</num>
+         <compatibility>~9.5.0</compatibility>
+         <download_url>https://github.com/ticgal/gdrive/releases/download/1.3.0/glpi-gdrive-1.3.0.tar.tgz</download_url>
       </version>
       <version>
-	<num>1.2.0</num>
-	<compatibility>9.2</compatibility>
-	<compatibility>9.3</compatibility>
-        <compatibility>9.4</compatibility>
+         <num>1.2.0</num>
+         <compatibility>9.2</compatibility>
+         <compatibility>9.3</compatibility>
+         <compatibility>9.4</compatibility>
       </version>
       <version>
-	<num>1.1.0</num>
-	<compatibility>9.2</compatibility>
-	<compatibility>9.3</compatibility>
+         <num>1.1.0</num>
+         <compatibility>9.2</compatibility>
+         <compatibility>9.3</compatibility>
       </version>
    </versions>
    <langs>
@@ -46,18 +45,8 @@
    </langs>
    <license>AGPL v3+</license>
    <tags>
-      	<en>
-		<tag>Helpdesk</tag>
-		<tag>Ticket</tag>
-		<tag>Google Drive</tag>
-		<tag>Import</tag>
-		<tag>Integration</tag>
-		
-	</en>
-   </tags>
-   <screenshots>
-      <screenshot>https://raw.githubusercontent.com/ticgal/GDrive/multimedia/GLPI-GDrive-Plugin-Screenshot-1.png</screenshot>
-      <screenshot>https://raw.githubusercontent.com/ticgal/GDrive/multimedia/GLPI-GDrive-Plugin-Screenshot-2.png</screenshot>
-      <screenshot>https://raw.githubusercontent.com/ticgal/GDrive/multimedia/GLPI-GDrive-Plugin-Screenshot-3.png</screenshot>
-   </screenshots>
-</root>
+      <en>
+         <tag>Helpdesk</tag>
+         <tag>Ticket</tag>
+         <tag>Google Drive</tag>
+         <tag>Import
