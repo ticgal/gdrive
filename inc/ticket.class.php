@@ -223,7 +223,7 @@ class PluginGdriveTicket extends CommonDBTM
                                 break;
                             };
                         }
-                        
+
                         btn.disabled = false;
                         btn.value = fileupload;
                         btn.addEventListener('click', function() {
@@ -260,9 +260,9 @@ class PluginGdriveTicket extends CommonDBTM
                     .setDeveloperKey(developerKey)
                     .setCallback(pickerCallback)
                     .build();
-                    
+
                     picker.setVisible(true);
-                    
+
                     //z-index issues with GLPI menu
                     var elements= document.getElementsByClassName('picker-dialog');
                     for(var i=0;i<elements.length;i++)
@@ -320,7 +320,7 @@ class PluginGdriveTicket extends CommonDBTM
                         loadPicker();
                     }
                 }
-                
+
                 function decodeResponse (token) {
                     var base64Url = token.split('.')[1];
                     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -342,7 +342,7 @@ class PluginGdriveTicket extends CommonDBTM
      * addGdriveButton
      *
      * @param  PluginGdriveConfig $config
-     * @return void
+     * @return string
      */
     public static function addGdriveButton(PluginGdriveConfig $config)
     {
@@ -360,7 +360,7 @@ class PluginGdriveTicket extends CommonDBTM
                     data-ux_mode="popup"
                     data-callback="handleCredentialResponse">
                 </div>
-                <div class="g_id_signin" 
+                <div class="g_id_signin"
                     data-type="standard"
                     data-type="standard"
                     data-shape="rectangular"
@@ -376,5 +376,11 @@ class PluginGdriveTicket extends CommonDBTM
         $out .= '</div>';
 
         return $out;
+    }
+
+    public static function uninstall(Migration $migration): void
+    {
+        $migration->dropTable(self::getTable());
+        $migration->executeMigration();
     }
 }

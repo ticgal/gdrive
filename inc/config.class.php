@@ -179,11 +179,22 @@ class PluginGdriveConfig extends CommonDBTM
                 `app_id` VARCHAR(50) NOT NULL DEFAULT '1234567890',
                 PRIMARY KEY (`id`)
 			)ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
-            
+
             $DB->doQuery($query);
 
             // Default config
             $DB->insert($table, ['id' => 1]);
         }
+    }
+
+
+    /**
+     * @param Migration $migration
+     * @return void
+     */
+    public static function uninstall(Migration $migration): void
+    {
+        $migration->dropTable(self::getTable());
+        $migration->executeMigration();
     }
 }
