@@ -1,0 +1,13 @@
+title = "gdrive gitleaks config"
+
+[extend]
+useDefault = true
+
+# tools/phpstan/phpstan.phar is a vendored, committed third-party binary
+# (phpstan.neon already excludes tools/* from static analysis). Its compiled
+# PHP source embeds many high-entropy identifiers (curl/sodium constant and
+# function names) that trip the generic-api-key rule; none of it is a real secret.
+[allowlist]
+paths = [
+  '''tools/phpstan/phpstan\.phar''',
+]

@@ -29,27 +29,18 @@
  * --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Gdrive\Config;
+
 /**
  * plugin_gdrive_install
  *
- * @return void
+ * @return bool
  */
-function plugin_gdrive_install()
+function plugin_gdrive_install(): bool
 {
     $migration = new Migration(PLUGIN_GDRIVE_VERSION);
 
-    // Parse inc directory
-    foreach (glob(dirname(__FILE__) . '/inc/*') as $filepath) {
-        // Load *.class.php files and get the class name
-        if (preg_match("/inc.(.+)\.class.php/", $filepath, $matches)) {
-            $classname = 'PluginGdrive' . ucfirst($matches[1]);
-            include_once($filepath);
-            // If the install method exists, load it
-            if (method_exists($classname, 'install')) {
-                $classname::install($migration);
-            }
-        }
-    }
+    Config::install($migration);
 
     return true;
 }
@@ -61,18 +52,7 @@ function plugin_gdrive_install()
  */
 function plugin_gdrive_uninstall(): bool
 {
-    // Parse inc directory
-    foreach (glob(dirname(__FILE__) . '/inc/*') as $filepath) {
-        // Load *.class.php files and get the class name
-        if (preg_match("/inc.(.+)\.class.php/", $filepath, $matches)) {
-            $classname = 'PluginGdrive' . ucfirst($matches[1]);
-            include_once($filepath);
-            // If the install method exists, load it
-            if (method_exists($classname, 'uninstall')) {
-                $classname::uninstall();
-            }
-        }
-    }
+    Config::uninstall();
 
     return true;
 }

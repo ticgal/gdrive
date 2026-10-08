@@ -1,4 +1,21 @@
 # GDrive - GLPI Plugin CHANGELOG
+## 4.0.0-beta.1 - 2026-10-08
+### Added
+- GLPI 12 support
+- The configuration table is removed when the plugin is uninstalled
+
+### Changed
+- Requires GLPI 12.0.0 or later; GLPI 11 is no longer supported
+
+### Fixed
+- The error message is now shown when a file cannot be downloaded from Google Drive
+- Failed downloads are no longer uploaded as if they were the selected file
+
+### Security
+- Configuration values are escaped before being printed in the page
+- The Google access token is no longer stored in a cookie sent to the GLPI server
+- Saving the plugin configuration now requires re-entering the password, like the GLPI configuration
+
 ## 3.0.0 - 2026-02-04
 ## Added
 - GLPI 11 support

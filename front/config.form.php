@@ -29,16 +29,16 @@
  * --------------------------------------------------------------------------
  */
 
-include("../../../inc/includes.php");
+use GlpiPlugin\Gdrive\Config;
 
-$plugin = new Plugin();
-if (!$plugin->isInstalled('gdrive') || !$plugin->isActivated('gdrive')) {
-    throw new Symfony\Component\HttpKernel\Exception\NotFoundHttpException();
+if (!Plugin::isPluginActive('gdrive')) {
+    throw new Glpi\Exception\Http\NotFoundHttpException();
 }
 
-Session::checkRight(PluginGdriveConfig::$rightname, UPDATE);
+Session::checkRight(Config::$rightname, UPDATE);
+Config::checkReAuthenticationOrRedirect();
 
-$config = new PluginGdriveConfig();
+$config = new Config();
 if (isset($_POST["update"])) {
     $config->check($_POST['id'], UPDATE);
     $config->update($_POST);
@@ -48,5 +48,5 @@ if (isset($_POST["update"])) {
 /** @var array $CFG_GLPI */
 global $CFG_GLPI;
 $redirect = $CFG_GLPI["root_doc"] . "/front/config.form.php";
-$redirect .= "?forcetab=" . urlencode('PluginGdriveConfig$1');
+$redirect .= "?forcetab=" . urlencode(Config::class . '$1');
 Html::redirect($redirect);

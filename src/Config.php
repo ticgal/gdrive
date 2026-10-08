@@ -29,17 +29,34 @@
  * --------------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Gdrive;
+
+use CommonDBTM;
+use CommonGLPI;
+use DBConnection;
+use Glpi\Application\View\TemplateRenderer;
+use Migration;
+
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access this file directly");
 }
 
-use Glpi\Application\View\TemplateRenderer;
 
-class PluginGdriveConfig extends CommonDBTM
+class Config extends CommonDBTM
 {
-    public static $rightname = 'config';
+    public static string $rightname = 'config';
 
     private static $instance = null;
+
+    /**
+     * Same as the core Config: saving requires the user to re-authenticate
+     *
+     * @return bool
+     */
+    protected static function itemTypeRequiresReauthentication(): bool
+    {
+        return true;
+    }
 
     public static function getIcon()
     {
@@ -72,9 +89,9 @@ class PluginGdriveConfig extends CommonDBTM
      * getInstance
      *
      * @param  mixed $n
-     * @return PluginGdriveConfig
+     * @return Config
      */
-    public static function getInstance($n = 1): PluginGdriveConfig
+    public static function getInstance($n = 1): Config
     {
         if (!isset(self::$instance)) {
             self::$instance = new self();
@@ -88,9 +105,9 @@ class PluginGdriveConfig extends CommonDBTM
     /**
      * getConfig
      *
-     * @return PluginGdriveConfig
+     * @return Config
      */
-    public static function getConfig(): PluginGdriveConfig
+    public static function getConfig(): Config
     {
         $config = new self();
         $config->getFromDB(1);
@@ -108,7 +125,7 @@ class PluginGdriveConfig extends CommonDBTM
     {
         $config = self::getInstance();
         $options = [
-            'full_width' => true
+            'full_width' => true,
         ];
 
         $templatePath = "@gdrive/config.html.twig";
@@ -123,7 +140,7 @@ class PluginGdriveConfig extends CommonDBTM
     /**
      * getTabNameForItem
      *
-     * @param  mixed $item
+     * @param  CommonGLPI $item
      * @param  mixed $withtemplate
      * @return string
      */
@@ -139,7 +156,7 @@ class PluginGdriveConfig extends CommonDBTM
     /**
      * displayTabContentForItem
      *
-     * @param  mixed $item
+     * @param  CommonGLPI $item
      * @param  mixed $tabnum
      * @param  mixed $withtemplate
      * @return bool
@@ -156,19 +173,18 @@ class PluginGdriveConfig extends CommonDBTM
     /**
      * install
      *
-     * @param  mixed $migration
+     * @param  Migration $migration
      * @return void
      */
     public static function install(Migration $migration): void
     {
-        /** @var \DBMysql $DB */
+        /** @var \DBmysql $DB */
         global $DB;
 
         $default_charset = DBConnection::getDefaultCharset();
         $default_collation = DBConnection::getDefaultCollation();
         $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
 
-        $table = self::getTable();
         $table = self::getTable();
         if (!$DB->tableExists($table)) {
             $migration->displayMessage("Installing $table");
@@ -179,11 +195,24 @@ class PluginGdriveConfig extends CommonDBTM
                 `app_id` VARCHAR(50) NOT NULL DEFAULT '1234567890',
                 PRIMARY KEY (`id`)
 			)ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
-            
+
             $DB->doQuery($query);
 
             // Default config
             $DB->insert($table, ['id' => 1]);
         }
+    }
+
+    /**
+     * uninstall
+     *
+     * @return void
+     */
+    public static function uninstall(): void
+    {
+        /** @var \DBmysql $DB */
+        global $DB;
+
+        $DB->doQuery("DROP TABLE IF EXISTS `" . self::getTable() . "`");
     }
 }

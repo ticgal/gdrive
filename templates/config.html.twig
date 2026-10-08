@@ -24,11 +24,10 @@ along with Gdrive. If not, see <http://www.gnu.org/licenses/>.
 http://www.gnu.org/licenses/agpl-3.0-standalone.html
 @link      https://tic.gal
 @since     2018
----------------------------------------------------------------------- 
+----------------------------------------------------------------------
 -->
 
 {% import 'components/form/fields_macros.html.twig' as fields %}
-{% import 'components/form/buttons.html.twig' as buttons %}
 
 {% set no_header = no_header|default(not item.isNewItem() and not _get._in_modal|default(false)) %}
 {% set bg = '' %}
