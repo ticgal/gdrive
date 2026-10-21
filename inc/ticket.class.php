@@ -66,6 +66,10 @@ class PluginGdriveTicket extends CommonDBTM
      */
     public static function postForm($params): void
     {
+        if (!Session::haveRight(PluginGdriveProfile::RIGHTNAME, READ)) {
+            return;
+        }
+
         $item = $params['item'];
         $config = PluginGdriveConfig::getConfig();
 
@@ -93,8 +97,12 @@ class PluginGdriveTicket extends CommonDBTM
      */
     public static function postTab($params): void
     {
+        if (!Session::haveRight(PluginGdriveProfile::RIGHTNAME, READ)) {
+            return;
+        }
+
         $item = $params['item'];
-        $itemtype = $params['options']['itemtype'];
+        $itemtype = $params['options']['itemtype'] ?? '';
         $config = PluginGdriveConfig::getConfig();
 
         switch ($item->getType()) {
@@ -143,14 +151,17 @@ class PluginGdriveTicket extends CommonDBTM
         $out .= "<script type='text/javascript'>
                 // The Browser API key obtained from the Google API Console.
                 // Replace with your own Browser API key, or your own key.
-                var developerKey = '" . $config->fields['developer_key'] . "';
+                var developerKey = " . self::jsValue($config->fields['developer_key']) . ";
 
                 // The Client ID obtained from the Google API Console. Replace with your own Client ID.
-                var clientId = '" . $config->fields['client_id'] . "';
+                var clientId = " . self::jsValue($config->fields['client_id']) . ";
 
                 // Replace with your own project number from console.developers.google.com.
                 // See 'Project number' under 'IAM & Admin' > 'Settings'
-                var appId = '" . $config->fields['app_id'] . "';
+                var appId = " . self::jsValue($config->fields['app_id']) . ";
+
+                // Expire the token cookie written by GDrive up to 3.0.0
+                document.cookie = 'access_token=; Max-Age=0; path=' + window.location.pathname.replace(/\/[^\/]*$/, '');
 
                 // Scope: See and download Google Drive files
                 var scope = 'https://www.googleapis.com/auth/drive.readonly';
@@ -187,18 +198,13 @@ class PluginGdriveTicket extends CommonDBTM
                     });
                 }
 
+                // The access token only lives in this page's memory: never persist it
                 function handleAuthResult(authResult) {
                     if (authResult && !authResult.error) {
                         access_token = authResult.access_token;
-                        document.cookie='access_token='+access_token;
                         createPicker();
-                    }else{
-                        if(authResult.error=='popup_closed_by_user'){
-                            access_token=getCookie('access_token');
-                            createPicker();
-                        }else{
-                            alert(authResult.error);
-                        }
+                    } else if (authResult && authResult.error != 'popup_closed_by_user') {
+                        alert(authResult.error);
                     }
                 }
 
@@ -233,23 +239,6 @@ class PluginGdriveTicket extends CommonDBTM
                     }
                 }
 
-                //Get content of cookie
-                function getCookie(cname){
-                    var name = cname + '=';
-                    var decodedCookie = decodeURIComponent(document.cookie);
-                    var ca = decodedCookie.split(';');
-                    for(var i = 0; i <ca.length; i++) {
-                        var c = ca[i];
-                        while (c.charAt(0) == ' ') {
-                            c = c.substring(1);
-                        }
-                        if (c.indexOf(name) == 0) {
-                            return c.substring(name.length, c.length);
-                        }
-                    }
-                    return '';
-                }
-
                 // Create and render a Picker object for picking user Documents.
                 function createPicker() {
                     var picker = new google.picker.PickerBuilder()
@@ -273,14 +262,14 @@ class PluginGdriveTicket extends CommonDBTM
 
                 // A simple callback implementation.
                 function pickerCallback(data) {
-                    var message = '" . __('Uploaded file', 'gdrive') . "';
+                    var message = " . self::jsValue(__('Uploaded file', 'gdrive')) . ";
                     if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
                         var fileInput=$('#' + idEditor)[0];
                         for(var i=0;i<data[google.picker.Response.DOCUMENTS].length;i++){
                             var file=data[google.picker.Response.DOCUMENTS][i];
                             downloadFile(file,fileInput,function(res){
                                 if(data==false){
-                                    message='" . __('Error loading the file', 'gdrive') . "';
+                                    message=" . self::jsValue(__('Error loading the file', 'gdrive')) . ";
                                 } else {
                                     document.getElementById('result').innerHTML = ' - ' + message;
                                 }
@@ -339,6 +328,19 @@ class PluginGdriveTicket extends CommonDBTM
     }
 
     /**
+     * jsValue
+     *
+     * Encode a PHP value as a JavaScript literal that is safe inside an inline <script>.
+     *
+     * @param  mixed $value
+     * @return string
+     */
+    private static function jsValue($value): string
+    {
+        return json_encode($value, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+    }
+
+    /**
      * addGdriveButton
      *
      * @param  PluginGdriveConfig $config
@@ -354,7 +356,7 @@ class PluginGdriveTicket extends CommonDBTM
             </div></th></tr>";
         $out .= "<tr><td align='center'><div class='d-flex align-items-stretch mb-1'>";
         $out .= '<div id="g_id_onload"
-                    data-client_id="' . $config->fields['client_id'] . '"
+                    data-client_id="' . htmlescape($config->fields['client_id']) . '"
                     data-context="signin"
                     data-auto_prompt="false"
                     data-ux_mode="popup"

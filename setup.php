@@ -31,7 +31,7 @@
 
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_GDRIVE_VERSION', '3.0.0');
+define('PLUGIN_GDRIVE_VERSION', '3.0.1');
 define("PLUGIN_GDRIVE_MIN_GLPI_VERSION", "11.0");
 define("PLUGIN_GDRIVE_MAX_GLPI_VERSION", "12.0");
 
@@ -66,6 +66,8 @@ function plugin_init_gdrive(): void
 {
     /** @var array $PLUGIN_HOOKS */
     global $PLUGIN_HOOKS;
+
+    Plugin::registerClass(PluginGdriveProfile::class, ['addtabon' => 'Profile']);
 
     if (Session::haveRightsOr('config', [READ, UPDATE])) {
         Plugin::registerClass(PluginGdriveConfig::class, ['addtabon' => 'Config']);

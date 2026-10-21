@@ -186,4 +186,17 @@ class PluginGdriveConfig extends CommonDBTM
             $DB->insert($table, ['id' => 1]);
         }
     }
+
+    /**
+     * uninstall
+     *
+     * @return void
+     */
+    public static function uninstall(): void
+    {
+        /** @var \DBMysql $DB */
+        global $DB;
+
+        $DB->dropTable(self::getTable(), true);
+    }
 }
