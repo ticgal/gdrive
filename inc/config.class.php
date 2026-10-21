@@ -39,6 +39,11 @@ class PluginGdriveConfig extends CommonDBTM
 {
     public static $rightname = 'config';
 
+    // Install-time placeholders: the button stays hidden until they are replaced
+    public const DEFAULT_DEVELOPER_KEY = 'xxxxxxxYYYYYYYY-12345678';
+    public const DEFAULT_CLIENT_ID = '1234567890-abcdef.apps.googleusercontent.com';
+    public const DEFAULT_APP_ID = '1234567890';
+
     private static $instance = null;
 
     public static function getIcon()
@@ -96,6 +101,62 @@ class PluginGdriveConfig extends CommonDBTM
         $config->getFromDB(1);
 
         return $config;
+    }
+
+    /**
+     * isConfigured
+     *
+     * @return bool
+     */
+    public function isConfigured(): bool
+    {
+        return !in_array($this->fields['developer_key'] ?? '', ['', self::DEFAULT_DEVELOPER_KEY], true)
+            && !in_array($this->fields['client_id'] ?? '', ['', self::DEFAULT_CLIENT_ID], true)
+            && !in_array($this->fields['app_id'] ?? '', ['', self::DEFAULT_APP_ID], true);
+    }
+
+    /**
+     * prepareInputForUpdate
+     *
+     * Each value is printed into every page that shows the button, so it must have the
+     * shape Google gives it.
+     *
+     * @param  mixed $input
+     * @return array|false
+     */
+    public function prepareInputForUpdate($input)
+    {
+        $fields = [
+            'developer_key' => [
+                'pattern' => '/^[A-Za-z0-9_-]+$/',
+                'label'   => __('Browser API key', 'gdrive'),
+            ],
+            'client_id' => [
+                'pattern' => '/^[0-9]+-[A-Za-z0-9_-]+\.apps\.googleusercontent\.com$/',
+                'label'   => __('Client ID', 'gdrive'),
+            ],
+            'app_id' => [
+                'pattern' => '/^[0-9]+$/',
+                'label'   => __('Project number', 'gdrive'),
+            ],
+        ];
+
+        foreach ($fields as $field => $rule) {
+            if (!isset($input[$field])) {
+                continue;
+            }
+            $input[$field] = trim((string) $input[$field]);
+            if (!preg_match($rule['pattern'], $input[$field])) {
+                Session::addMessageAfterRedirect(
+                    sprintf(__('Invalid value for %s', 'gdrive'), $rule['label']),
+                    false,
+                    ERROR
+                );
+                return false;
+            }
+        }
+
+        return $input;
     }
 
     /**
@@ -169,14 +230,14 @@ class PluginGdriveConfig extends CommonDBTM
         $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
 
         $table = self::getTable();
-        $table = self::getTable();
         if (!$DB->tableExists($table)) {
             $migration->displayMessage("Installing $table");
+            // GLPI has no Migration::createTable(): the initial CREATE TABLE is raw DDL built only from constants
             $query = "CREATE TABLE IF NOT EXISTS `$table` (
                 `id` INT {$default_key_sign} NOT NULL AUTO_INCREMENT,
-                `developer_key` VARCHAR(250) NOT NULL DEFAULT 'xxxxxxxYYYYYYYY-12345678',
-                `client_id` VARCHAR(250) NOT NULL DEFAULT '1234567890-abcdef.apps.googleusercontent.com',
-                `app_id` VARCHAR(50) NOT NULL DEFAULT '1234567890',
+                `developer_key` VARCHAR(250) NOT NULL DEFAULT {$DB->quoteValue(self::DEFAULT_DEVELOPER_KEY)},
+                `client_id` VARCHAR(250) NOT NULL DEFAULT {$DB->quoteValue(self::DEFAULT_CLIENT_ID)},
+                `app_id` VARCHAR(50) NOT NULL DEFAULT {$DB->quoteValue(self::DEFAULT_APP_ID)},
                 PRIMARY KEY (`id`)
 			)ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
             

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-21 16:40+0200\n"
+"POT-Creation-Date: 2026-10-21 16:58+0200\n"
 "PO-Revision-Date: 2026-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,9 +17,27 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: inc/config.class.php:57
+#: inc/config.class.php:62
 msgid "GDrive"
 msgstr ""
+
+#: inc/config.class.php:132
+msgid "Browser API key"
+msgstr ""
+
+#: inc/config.class.php:136
+msgid "Client ID"
+msgstr ""
+
+#: inc/config.class.php:140
+msgid "Project number"
+msgstr ""
+
+#: inc/config.class.php:151
+#, php-format
+msgid "Invalid value for %s"
+msgstr ""
+
 
 #: inc/profile.class.php:128
 msgid "Use"
@@ -29,15 +47,19 @@ msgstr ""
 msgid "Attach files from Google Drive"
 msgstr ""
 
-#: inc/ticket.class.php:265
+#: inc/ticket.class.php:294
 msgid "Uploaded file"
 msgstr ""
 
-#: inc/ticket.class.php:272
+#: inc/ticket.class.php:295
 msgid "Error loading the file"
 msgstr ""
 
-#: inc/ticket.class.php:375
+#: inc/ticket.class.php:322
+msgid "The selected file cannot be downloaded"
+msgstr ""
+
+#: inc/ticket.class.php:390
 msgid "Select file"
 msgstr ""
 
