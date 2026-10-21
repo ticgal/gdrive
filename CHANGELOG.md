@@ -1,4 +1,13 @@
 # GDrive - GLPI Plugin CHANGELOG
+## 3.0.1 - 2026-10-21
+### Security
+- The Google access token is no longer stored in a browser cookie. Closing the Google popup no longer reuses the token of a previous user of the same browser.
+- Configuration values are encoded before they are written into the page.
+### Added
+- "Attach files from Google Drive" right, in the GDrive tab of central profiles. Central profiles get it when the plugin is installed or updated. Self-service profiles no longer see the GDrive button.
+### Fixed
+- Uninstalling the plugin removes its configuration table and its right.
+
 ## 3.0.0 - 2026-02-04
 ## Added
 - GLPI 11 support
