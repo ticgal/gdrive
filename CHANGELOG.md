@@ -2,11 +2,15 @@
 ## 3.0.1 - 2026-10-21
 ### Security
 - The Google access token is no longer stored in a browser cookie. Closing the Google popup no longer reuses the token of a previous user of the same browser.
-- Configuration values are encoded before they are written into the page.
+- Configuration values are encoded before they are written into the page, and saving rejects values that do not have the shape of a Google API key, client ID or project number.
 ### Added
 - "Attach files from Google Drive" right, in the GDrive tab of central profiles. Central profiles get it when the plugin is installed or updated. Self-service profiles no longer see the GDrive button.
 ### Fixed
 - Uninstalling the plugin removes its configuration table and its right.
+- The button stays hidden until the install-time placeholders are replaced with a real configuration.
+- The Google scripts are loaded once per page, and the button no longer repeats element ids when several forms show it.
+- A failed download is now reported next to the button, and the "no URL" alert is translated.
+- The plugin no longer loads its own copy of TinyMCE from a fixed path, which failed on instances served from a sub-path.
 
 ## 3.0.0 - 2026-02-04
 ## Added

@@ -37,6 +37,8 @@ class PluginGdriveTicket extends CommonDBTM
 {
     public static $rightname = 'ticket';
 
+    private static bool $scripts_added = false;
+
     /**
      * getTypeName
      *
@@ -72,6 +74,9 @@ class PluginGdriveTicket extends CommonDBTM
 
         $item = $params['item'];
         $config = PluginGdriveConfig::getConfig();
+        if (!$config->isConfigured()) {
+            return;
+        }
 
         switch ($item->getType()) {
              //case 'Ticket':
@@ -104,6 +109,9 @@ class PluginGdriveTicket extends CommonDBTM
         $item = $params['item'];
         $itemtype = $params['options']['itemtype'] ?? '';
         $config = PluginGdriveConfig::getConfig();
+        if (!$config->isConfigured()) {
+            return;
+        }
 
         switch ($item->getType()) {
             case 'Computer':
@@ -123,16 +131,13 @@ class PluginGdriveTicket extends CommonDBTM
             //case 'Cable':
             case 'Item_DeviceSimcard':
                 if ($itemtype == 'Document_Item') {
-                    echo '<script type="text/javascript" src="/public/lib/tinymce.min.js"></script>';
+                    $rand = mt_rand();
                     echo self::addGdriveScripts($config);
-                    echo self::addGdriveButton($config);
+                    echo self::addGdriveButton($config, $rand);
 
-                    $out = '<script>
-                        var btnExist = $("#gdrivebtn");
-                        $(".firstbloc").append(btnExist);
-                        </script>';
-
-                    echo $out;
+                    echo "<script>
+                        $('.firstbloc').append($('#gdrivebtn$rand'));
+                        </script>";
                 }
                 break;
         }
@@ -141,12 +146,26 @@ class PluginGdriveTicket extends CommonDBTM
     /**
      * addGdriveScripts
      *
-     * @param  PuginGdriveConfig $config
+     * The scripts are emitted once per request, however many forms show the button.
+     *
+     * @param  PluginGdriveConfig $config
      * @return string
      */
     public static function addGdriveScripts(PluginGdriveConfig $config): string
     {
+        if (self::$scripts_added) {
+            return '';
+        }
+        self::$scripts_added = true;
+
         $out = '<script src="https://accounts.google.com/gsi/client" async defer></script>';
+        $out .= '<div id="g_id_onload"
+                    data-client_id="' . htmlescape($config->fields['client_id']) . '"
+                    data-context="signin"
+                    data-auto_prompt="false"
+                    data-ux_mode="popup"
+                    data-callback="handleCredentialResponse">
+                </div>';
 
         $out .= "<script type='text/javascript'>
                 // The Browser API key obtained from the Google API Console.
@@ -170,6 +189,7 @@ class PluginGdriveTicket extends CommonDBTM
                 var access_token;
                 var pickerInited = false;
                 var idEditor = 0;
+                var currentBlock = null;
 
                 // Use the Google API Loader script to load the google.picker script.
                 function loadPicker() {
@@ -220,7 +240,7 @@ class PluginGdriveTicket extends CommonDBTM
                     var authBtns = $('.authbtn');
 
                     for (let btn of authBtns) {
-                        var form = btn.parentElement.parentElement.parentElement;
+                        var form = btn.closest('.gdrive-block').parentElement;
                         var inputs = form.getElementsByTagName('input');
                         var fileupload;
                         for(var input of inputs){
@@ -234,6 +254,7 @@ class PluginGdriveTicket extends CommonDBTM
                         btn.value = fileupload;
                         btn.addEventListener('click', function() {
                             idEditor = btn.value;
+                            currentBlock = btn.closest('.gdrive-block');
                             getToken();
                         });
                     }
@@ -262,16 +283,16 @@ class PluginGdriveTicket extends CommonDBTM
 
                 // A simple callback implementation.
                 function pickerCallback(data) {
-                    var message = " . self::jsValue(__('Uploaded file', 'gdrive')) . ";
                     if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
                         var fileInput=$('#' + idEditor)[0];
+                        var result = currentBlock ? currentBlock.querySelector('.gdrive-result') : null;
                         for(var i=0;i<data[google.picker.Response.DOCUMENTS].length;i++){
                             var file=data[google.picker.Response.DOCUMENTS][i];
                             downloadFile(file,fileInput,function(res){
-                                if(data==false){
-                                    message=" . self::jsValue(__('Error loading the file', 'gdrive')) . ";
-                                } else {
-                                    document.getElementById('result').innerHTML = ' - ' + message;
+                                if (result) {
+                                    result.textContent = ' - ' + (res
+                                        ? " . self::jsValue(__('Uploaded file', 'gdrive')) . "
+                                        : " . self::jsValue(__('Error loading the file', 'gdrive')) . ");
                                 }
                             });
                         }
@@ -298,7 +319,7 @@ class PluginGdriveTicket extends CommonDBTM
                         };
                         xhr.send();
                     } else {
-                        alert('Sin url');
+                        alert(" . self::jsValue(__('The selected file cannot be downloaded', 'gdrive')) . ");
                         callback(false);
                     }
                 }
@@ -344,26 +365,20 @@ class PluginGdriveTicket extends CommonDBTM
      * addGdriveButton
      *
      * @param  PluginGdriveConfig $config
-     * @return void
+     * @param  int|null $rand
+     * @return string
      */
-    public static function addGdriveButton(PluginGdriveConfig $config)
+    public static function addGdriveButton(PluginGdriveConfig $config, ?int $rand = null): string
     {
-        $out = "<div class='d-flex flex-column' id='gdrivebtn'>";
+        $id = $rand === null ? '' : " id='gdrivebtn$rand'";
+        $out = "<div class='d-flex flex-column gdrive-block'$id>";
 
-        $out .= "<tr><th colspan='2'><div class='d-flex'>
-            <span class='mb-1'><i class='" . self::getIcon() . "'></i> " . self::getTypeName(2) . "</span>
-            <div class='mb-1 ms-1' id='result'></div>
-            </div></th></tr>";
-        $out .= "<tr><td align='center'><div class='d-flex align-items-stretch mb-1'>";
-        $out .= '<div id="g_id_onload"
-                    data-client_id="' . htmlescape($config->fields['client_id']) . '"
-                    data-context="signin"
-                    data-auto_prompt="false"
-                    data-ux_mode="popup"
-                    data-callback="handleCredentialResponse">
-                </div>
-                <div class="g_id_signin" 
-                    data-type="standard"
+        $out .= "<div class='d-flex'>
+            <span class='mb-1'><i class='" . self::getIcon() . "'></i> " . htmlescape(self::getTypeName(2)) . "</span>
+            <div class='mb-1 ms-1 gdrive-result'></div>
+            </div>";
+        $out .= "<div class='d-flex align-items-stretch mb-1'>";
+        $out .= '<div class="g_id_signin"
                     data-type="standard"
                     data-shape="rectangular"
                     data-theme="outline"
@@ -371,9 +386,9 @@ class PluginGdriveTicket extends CommonDBTM
                     data-size="large"
                     data-logo_alignment="left">
                 </div>';
-        $out .= "<button type='button' class='btn authbtn flex-grow-1' id='auth' disabled>";
-        $out .= __('Select file', 'gdrive') . "</button>";
-        $out .= "</div></td></tr>";
+        $out .= "<button type='button' class='btn authbtn flex-grow-1' disabled>";
+        $out .= htmlescape(__('Select file', 'gdrive')) . "</button>";
+        $out .= "</div>";
 
         $out .= '</div>';
 
