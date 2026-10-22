@@ -12,7 +12,19 @@ You can transfer files from the Google storage to most of the GLPI Assets.
 
 ### Setup
 Install like any other GLPI plugin from Marketplace or download and install in the plugin folder.
-You will additionally need to a Google Drive token. Please refer to the official documentation to get a token.
+
+You will additionally need a Google Cloud project with the Google Picker API and the Google Drive API enabled, and two credentials from it:
+- a **Browser API key**;
+- an **OAuth client ID** of type *Web application*.
+
+Enter them, together with the **project number** (*IAM & Admin > Settings*), in *Setup > General > GDrive*. The button stays hidden until the three values are set.
+
+The key and the client ID are sent to the browser of every user who sees the button, so restrict them in the Google Cloud Console:
+- API key: *Application restrictions* = HTTP referrers, with your GLPI URL (e.g. `https://glpi.example.com/*`); *API restrictions* = Google Picker API only.
+- OAuth client: *Authorized JavaScript origins* = your GLPI origin (e.g. `https://glpi.example.com`).
+
+### Rights
+The button is shown only to profiles with the *Attach files from Google Drive* right (*Administration > Profiles > GDrive*). Central profiles get it when the plugin is installed or updated. Profiles created later start without it. Self-service profiles never see the button.
 ### How to use
 Nice and easy:
 1. Click on the Gdrive button

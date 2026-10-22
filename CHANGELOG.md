@@ -9,7 +9,8 @@
 - Uninstalling the plugin removes its configuration table and its right.
 - The button stays hidden until the install-time placeholders are replaced with a real configuration.
 - The Google scripts are loaded once per page, and the button no longer repeats element ids when several forms show it.
-- A failed download is now reported next to the button, and the "no URL" alert is translated.
+- A failed download is now reported next to the button, including HTTP errors from Google, and the "no URL" alert is translated.
+- Google Docs, Sheets, Slides and Drawings are exported as DOCX, XLSX, PPTX and PDF. Before, Google's error message was attached instead of the file.
 - The plugin no longer loads its own copy of TinyMCE from a fixed path, which failed on instances served from a sub-path.
 
 ## 3.0.0 - 2026-02-04

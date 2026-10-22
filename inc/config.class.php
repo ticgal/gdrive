@@ -145,8 +145,10 @@ class PluginGdriveConfig extends CommonDBTM
             if (!isset($input[$field])) {
                 continue;
             }
-            $input[$field] = trim((string) $input[$field]);
-            if (!preg_match($rule['pattern'], $input[$field])) {
+            if (is_string($input[$field])) {
+                $input[$field] = trim($input[$field]);
+            }
+            if (!is_string($input[$field]) || !preg_match($rule['pattern'], $input[$field])) {
                 Session::addMessageAfterRedirect(
                     sprintf(__('Invalid value for %s', 'gdrive'), $rule['label']),
                     false,
