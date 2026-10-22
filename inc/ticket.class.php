@@ -286,11 +286,14 @@ class PluginGdriveTicket extends CommonDBTM
                     if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
                         var fileInput=$('#' + idEditor)[0];
                         var result = currentBlock ? currentBlock.querySelector('.gdrive-result') : null;
+                        // One failed file keeps the error shown, whatever order the downloads finish in
+                        var failed = false;
                         for(var i=0;i<data[google.picker.Response.DOCUMENTS].length;i++){
                             var file=data[google.picker.Response.DOCUMENTS][i];
                             downloadFile(file,fileInput,function(res){
+                                failed = failed || !res;
                                 if (result) {
-                                    result.textContent = ' - ' + (res
+                                    result.textContent = ' - ' + (!failed
                                         ? " . self::jsValue(__('Uploaded file', 'gdrive')) . "
                                         : " . self::jsValue(__('Error loading the file', 'gdrive')) . ");
                                 }
@@ -299,29 +302,73 @@ class PluginGdriveTicket extends CommonDBTM
                     }
                 }
 
+                // Google Docs, Sheets, Slides and Drawings have no binary content to download
+                // (alt=media answers 403): they are exported to an Office format or PDF instead
+                var exportFormats = {
+                    'application/vnd.google-apps.document': {
+                        mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                        extension: 'docx'
+                    },
+                    'application/vnd.google-apps.spreadsheet': {
+                        mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        extension: 'xlsx'
+                    },
+                    'application/vnd.google-apps.presentation': {
+                        mimeType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                        extension: 'pptx'
+                    },
+                    'application/vnd.google-apps.drawing': {
+                        mimeType: 'application/pdf',
+                        extension: 'pdf'
+                    }
+                };
+
                 function downloadFile(file, fileInput, callback){
-                    if (file[google.picker.Document.URL]) {
-                        var accessToken = access_token;
-                        var xhr = new XMLHttpRequest();
-                        xhr.responseType = 'blob';
-                        xhr.open('GET', 'https://www.googleapis.com/drive/v3/files/'+file[google.picker.Document.ID]+'?alt=media');
-                        xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-                        xhr.onload = function() {
-                            var fil = new File([xhr.response], file[google.picker.Document.NAME], {type: file[google.picker.Document.MIME_TYPE], lastModified: Date.now()});
-                            //var editor = {targetElm: fileInput};
-                            var editor = new tinymce.Editor(fileInput.id, {}, tinymce.EditorManager);
-                            var fileTag = uploadFile(fil,editor);
-                            callback(true);
-                        };
-                        xhr.onerror = function() {
-                            alert('Error: '+xhr.error);
-                            callback(false);
-                        };
-                        xhr.send();
-                    } else {
+                    if (!file[google.picker.Document.URL]) {
                         alert(" . self::jsValue(__('The selected file cannot be downloaded', 'gdrive')) . ");
                         callback(false);
+                        return;
                     }
+
+                    var name = file[google.picker.Document.NAME];
+                    var mimeType = file[google.picker.Document.MIME_TYPE];
+                    var url = 'https://www.googleapis.com/drive/v3/files/' + encodeURIComponent(file[google.picker.Document.ID]);
+                    if (mimeType && mimeType.indexOf('application/vnd.google-apps.') === 0) {
+                        var format = exportFormats[mimeType];
+                        if (!format) {
+                            // Forms, sites, folders...: nothing to export
+                            alert(" . self::jsValue(__('The selected file cannot be downloaded', 'gdrive')) . ");
+                            callback(false);
+                            return;
+                        }
+                        url += '/export?mimeType=' + encodeURIComponent(format.mimeType);
+                        mimeType = format.mimeType;
+                        if (!name.toLowerCase().endsWith('.' + format.extension)) {
+                            name += '.' + format.extension;
+                        }
+                    } else {
+                        url += '?alt=media';
+                    }
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.responseType = 'blob';
+                    xhr.open('GET', url);
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
+                    xhr.onload = function() {
+                        // An HTTP error still fires onload: its body is Google's error, not the file
+                        if (xhr.status !== 200) {
+                            callback(false);
+                            return;
+                        }
+                        var fil = new File([xhr.response], name, {type: mimeType, lastModified: Date.now()});
+                        var editor = new tinymce.Editor(fileInput.id, {}, tinymce.EditorManager);
+                        uploadFile(fil,editor);
+                        callback(true);
+                    };
+                    xhr.onerror = function() {
+                        callback(false);
+                    };
+                    xhr.send();
                 }
 
                 function handleCredentialResponse(response) {
@@ -358,7 +405,11 @@ class PluginGdriveTicket extends CommonDBTM
      */
     private static function jsValue($value): string
     {
-        return json_encode($value, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+        // Invalid UTF-8 (a broken translation) is substituted, so the result is never false
+        return json_encode(
+            $value,
+            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE
+        );
     }
 
     /**
