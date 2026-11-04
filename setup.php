@@ -33,7 +33,7 @@ use Glpi\Plugin\Hooks;
 use GlpiPlugin\Gdrive\Config;
 use GlpiPlugin\Gdrive\Ticket;
 
-define('PLUGIN_GDRIVE_VERSION', '4.0.0-beta.1');
+define('PLUGIN_GDRIVE_VERSION', '4.0.0-beta.2');
 define("PLUGIN_GDRIVE_MIN_GLPI_VERSION", "12.0.0");
 define("PLUGIN_GDRIVE_MAX_GLPI_VERSION", "12.1.0");
 
