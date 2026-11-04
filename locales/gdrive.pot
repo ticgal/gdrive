@@ -48,3 +48,19 @@ msgstr ""
 #: templates/config.html.twig:72
 msgid "See 'Project number' under 'IAM & Admin' > 'Settings'"
 msgstr ""
+
+#: src/Ticket.php
+msgid "Google services could not be loaded"
+msgstr ""
+
+#: templates/config.html.twig
+msgid "API key"
+msgstr ""
+
+#: templates/config.html.twig
+msgid "Client ID"
+msgstr ""
+
+#: templates/config.html.twig
+msgid "Project number"
+msgstr ""

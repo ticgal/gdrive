@@ -3,13 +3,17 @@
 ### Added
 - GLPI 12 support
 - The configuration table is removed when the plugin is uninstalled
+- Google Docs, Sheets, Slides and Drawings can now be attached; they are exported as .docx, .xlsx, .pptx and .png
 
 ### Changed
 - Requires GLPI 12.0.0 or later; GLPI 11 is no longer supported
+- The separate "Sign in with Google" button is removed; "Select file" now starts the Google sign-in directly
+- The GDrive button and the configuration form follow the native GLPI look, with shorter field labels
 
 ### Fixed
 - The error message is now shown when a file cannot be downloaded from Google Drive
 - Failed downloads are no longer uploaded as if they were the selected file
+- The status message is now shown next to the button that was used when there are several forms on the page
 
 ### Security
 - Configuration values are escaped before being printed in the page

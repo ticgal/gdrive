@@ -55,7 +55,7 @@ final class Ticket
      */
     public static function getIcon(): string
     {
-        return "fa-brands fa-google-drive fa-rotate-180";
+        return "ti ti-brand-google-drive";
     }
 
     /**
@@ -148,20 +148,25 @@ final class Ticket
      */
     public static function addGdriveScripts(Config $config): string
     {
-        $out = '<script src="https://accounts.google.com/gsi/client" async defer></script>';
-
-        $out .= "<script type='text/javascript'>
+        $out = "<script type='text/javascript'>
                 // The Browser API key obtained from the Google API Console.
-                // Replace with your own Browser API key, or your own key.
                 var developerKey = " . self::jsString($config->fields['developer_key']) . ";
 
-                // The Client ID obtained from the Google API Console. Replace with your own Client ID.
+                // The Client ID obtained from the Google API Console.
                 var clientId = " . self::jsString($config->fields['client_id']) . ";
 
-                // Replace with your own project number from console.developers.google.com.
-                // See 'Project number' under 'IAM & Admin' > 'Settings'
+                // Project number from console.developers.google.com ('IAM & Admin' > 'Settings').
                 var appId = " . self::jsString($config->fields['app_id']) . ";
 
+                var gdriveMessages = {
+                    uploaded: " . self::jsString(__('Uploaded file', 'gdrive')) . ",
+                    error: " . self::jsString(__('Error loading the file', 'gdrive')) . ",
+                    notReady: " . self::jsString(__('Google services could not be loaded', 'gdrive')) . "
+                };
+                </script>";
+
+        $out .= <<<'JS'
+            <script type='text/javascript'>
                 // Scope: See and download Google Drive files
                 var scope = 'https://www.googleapis.com/auth/drive.readonly';
 
@@ -169,24 +174,41 @@ final class Ticket
                 var access_token;
                 var pickerInited = false;
                 var idEditor = 0;
+                var currentPicker = null;
 
-                // Use the Google API Loader script to load the google.picker script.
-                function loadPicker() {
-                    gapi.load('client', {'callback': initClient});
-                    gapi.load('picker', {'callback': initializePicker});
-                    enableButtons();
+                // Google native files cannot be downloaded: they are exported to a regular format
+                var gdriveExportTypes = {
+                    'application/vnd.google-apps.document': {mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', ext: 'docx'},
+                    'application/vnd.google-apps.spreadsheet': {mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', ext: 'xlsx'},
+                    'application/vnd.google-apps.presentation': {mime: 'application/vnd.openxmlformats-officedocument.presentationml.presentation', ext: 'pptx'},
+                    'application/vnd.google-apps.drawing': {mime: 'image/png', ext: 'png'}
+                };
+
+                // Show a status message next to the button that started the upload
+                function setResult(text) {
+                    var target = currentPicker ? currentPicker.querySelector('.gdrive-result') : null;
+                    if (target) {
+                        target.textContent = text;
+                    }
                 }
 
-                /**
-                 * Callback after the API client is loaded. Loads the
-                 * discovery doc to initialize the API.
-                 */
-                async function initializePicker() {
-                    await gapi.client.load('https://www.googleapis.com/discovery/v1/apis/drive/v3/rest');
-                    pickerInited = true;
+                function gdriveLoadScript(src, isLoaded, onLoad) {
+                    if (isLoaded()) {
+                        onLoad();
+                        return;
+                    }
+                    var script = document.createElement('script');
+                    script.src = src;
+                    script.async = true;
+                    script.onload = onLoad;
+                    document.head.appendChild(script);
                 }
 
-                async function initClient(){
+                // Google Identity Services: OAuth token client
+                function initClient() {
+                    if (tokenClient || typeof google === 'undefined' || !google.accounts) {
+                        return;
+                    }
                     tokenClient = google.accounts.oauth2.initTokenClient({
                         client_id: clientId,
                         scope: scope,
@@ -195,6 +217,16 @@ final class Ticket
                             handleAuthResult(tokenResponse);
                         },
                     });
+                }
+
+                // Google API loader: Picker
+                function initPicker() {
+                    if (pickerInited || typeof gapi === 'undefined') {
+                        return;
+                    }
+                    gapi.load('picker', {'callback': function () {
+                        pickerInited = true;
+                    }});
                 }
 
                 function handleAuthResult(authResult) {
@@ -214,37 +246,22 @@ final class Ticket
                     }
                 }
 
-                function getToken(){
-                    tokenClient.requestAccessToken();
-                }
-
                 function revokeToken() {
                     google.accounts.oauth2.revoke(access_token, () => {console.log('access token revoked')});
                 }
 
-                function enableButtons() {
-                    var authBtns = $('.authbtn');
-
-                    for (let btn of authBtns) {
-                        var form = btn.parentElement.parentElement.parentElement;
-                        var inputs = form.getElementsByTagName('input');
-                        var fileupload;
-                        for(var input of inputs){
-                            if(input.id.includes('fileupload')){
-                                fileupload = input.id;
-                                break;
-                            };
+                // The file upload input of the form that contains the button
+                function gdriveFindUploadInput(btn) {
+                    var node = btn.parentElement;
+                    while (node) {
+                        var input = node.querySelector('input[id*="fileupload"]');
+                        if (input) {
+                            return input;
                         }
-                        
-                        btn.disabled = false;
-                        btn.value = fileupload;
-                        btn.addEventListener('click', function() {
-                            idEditor = btn.value;
-                            getToken();
-                        });
+                        node = node.parentElement;
                     }
+                    return null;
                 }
-
 
                 // Create and render a Picker object for picking user Documents.
                 function createPicker() {
@@ -256,9 +273,9 @@ final class Ticket
                     .setDeveloperKey(developerKey)
                     .setCallback(pickerCallback)
                     .build();
-                    
+
                     picker.setVisible(true);
-                    
+
                     //z-index issues with GLPI menu
                     var elements= document.getElementsByClassName('picker-dialog');
                     for(var i=0;i<elements.length;i++)
@@ -269,71 +286,96 @@ final class Ticket
 
                 // A simple callback implementation.
                 function pickerCallback(data) {
-                    var message = " . self::jsString(__('Uploaded file', 'gdrive')) . ";
                     if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
                         var fileInput=$('#' + idEditor)[0];
+                        var failed = false;
                         for(var i=0;i<data[google.picker.Response.DOCUMENTS].length;i++){
                             var file=data[google.picker.Response.DOCUMENTS][i];
                             downloadFile(file,fileInput,function(res){
-                                if(res==false){
-                                    document.getElementById('result').textContent = ' - ' + " . self::jsString(__('Error loading the file', 'gdrive')) . ";
-                                } else {
-                                    document.getElementById('result').textContent = ' - ' + message;
-                                }
+                                failed = failed || !res;
+                                setResult(failed ? gdriveMessages.error : gdriveMessages.uploaded);
                             });
                         }
                     }
                 }
 
                 function downloadFile(file, fileInput, callback){
-                    if (file[google.picker.Document.URL]) {
-                        var accessToken = access_token;
-                        var xhr = new XMLHttpRequest();
-                        xhr.responseType = 'blob';
-                        xhr.open('GET', 'https://www.googleapis.com/drive/v3/files/'+file[google.picker.Document.ID]+'?alt=media');
-                        xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-                        xhr.onload = function() {
-                            if (xhr.status < 200 || xhr.status >= 300) {
-                                callback(false);
-                                return;
-                            }
-                            var fil = new File([xhr.response], file[google.picker.Document.NAME], {type: file[google.picker.Document.MIME_TYPE], lastModified: Date.now()});
-                            //var editor = {targetElm: fileInput};
-                            var editor = new tinymce.Editor(fileInput.id, {}, tinymce.EditorManager);
-                            var fileTag = uploadFile(fil,editor);
-                            callback(true);
-                        };
-                        xhr.onerror = function() {
-                            alert('Error: '+xhr.error);
-                            callback(false);
-                        };
-                        xhr.send();
-                    } else {
-                        alert('Sin url');
+                    var fileId = file[google.picker.Document.ID];
+                    var name = file[google.picker.Document.NAME];
+                    var mimeType = file[google.picker.Document.MIME_TYPE] || '';
+                    if (!fileId) {
                         callback(false);
+                        return;
                     }
-                }
 
-                function handleCredentialResponse(response) {
-                    const responsePayload = decodeResponse(response.credential);
-                    if(responsePayload.sub){
-                        loadPicker();
+                    var url = 'https://www.googleapis.com/drive/v3/files/' + encodeURIComponent(fileId);
+                    if (mimeType.indexOf('application/vnd.google-apps.') === 0) {
+                        // Docs, Sheets, Slides...: export to a regular format
+                        var target = gdriveExportTypes[mimeType];
+                        if (!target) {
+                            callback(false);
+                            return;
+                        }
+                        url += '/export?mimeType=' + encodeURIComponent(target.mime);
+                        mimeType = target.mime;
+                        if (name.toLowerCase().slice(-(target.ext.length + 1)) !== '.' + target.ext) {
+                            name += '.' + target.ext;
+                        }
+                    } else {
+                        url += '?alt=media&supportsAllDrives=true';
                     }
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.responseType = 'blob';
+                    xhr.open('GET', url);
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
+                    xhr.onload = function() {
+                        if (xhr.status < 200 || xhr.status >= 300) {
+                            callback(false);
+                            return;
+                        }
+                        var fil = new File([xhr.response], name, {type: mimeType, lastModified: Date.now()});
+                        var editor = new tinymce.Editor(fileInput.id, {}, tinymce.EditorManager);
+                        uploadFile(fil, editor);
+                        callback(true);
+                    };
+                    xhr.onerror = function() {
+                        callback(false);
+                    };
+                    xhr.send();
                 }
-                
-                function decodeResponse (token) {
-                    var base64Url = token.split('.')[1];
-                    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                    }).join(''));
 
-                    return JSON.parse(jsonPayload);
+                // One delegated listener for every "Select file" button of the page
+                if (!window.gdriveBound) {
+                    window.gdriveBound = true;
+                    document.addEventListener('click', function (e) {
+                        var btn = e.target.closest ? e.target.closest('.gdrive-picker .authbtn') : null;
+                        if (!btn) {
+                            return;
+                        }
+                        currentPicker = btn.closest('.gdrive-picker');
+                        setResult('');
+
+                        var input = gdriveFindUploadInput(btn);
+                        initClient();
+                        initPicker();
+                        if (!input || !tokenClient || !pickerInited) {
+                            setResult(gdriveMessages.notReady);
+                            return;
+                        }
+                        idEditor = input.id;
+                        tokenClient.requestAccessToken();
+                    });
                 }
 
-                </script>";
-
-        $out .= '<script async defer src="https://apis.google.com/js/api.js"></script>';
+                gdriveLoadScript('https://accounts.google.com/gsi/client', function () {
+                    return typeof google !== 'undefined' && !!google.accounts;
+                }, initClient);
+                gdriveLoadScript('https://apis.google.com/js/api.js', function () {
+                    return typeof gapi !== 'undefined';
+                }, initPicker);
+            </script>
+            JS;
 
         return $out;
     }
@@ -346,31 +388,13 @@ final class Ticket
      */
     public static function addGdriveButton(Config $config): string
     {
-        $out = "<div class='d-flex flex-column' id='gdrivebtn'>";
+        $out = "<div class='gdrive-picker d-flex flex-wrap align-items-center gap-2 mb-2' id='gdrivebtn'>";
 
-        $out .= "<tr><th colspan='2'><div class='d-flex'>
-            <span class='mb-1'><i class='" . self::getIcon() . "'></i> " . self::getTypeName(2) . "</span>
-            <div class='mb-1 ms-1' id='result'></div>
-            </div></th></tr>";
-        $out .= "<tr><td align='center'><div class='d-flex align-items-stretch mb-1'>";
-        $out .= '<div id="g_id_onload"
-                    data-client_id="' . htmlspecialchars($config->fields['client_id'], ENT_QUOTES) . '"
-                    data-context="signin"
-                    data-auto_prompt="false"
-                    data-ux_mode="popup"
-                    data-callback="handleCredentialResponse">
-                </div>
-                <div class="g_id_signin" 
-                    data-type="standard"
-                    data-shape="rectangular"
-                    data-theme="outline"
-                    data-text="signin_with"
-                    data-size="large"
-                    data-logo_alignment="left">
-                </div>';
-        $out .= "<button type='button' class='btn authbtn flex-grow-1' id='auth' disabled>";
-        $out .= __('Select file', 'gdrive') . "</button>";
-        $out .= "</div></td></tr>";
+        $out .= "<span class='d-inline-flex align-items-center text-muted'>
+            <i class='" . self::getIcon() . " me-1'></i>" . self::getTypeName(2) . "</span>";
+        $out .= "<button type='button' class='btn btn-outline-secondary authbtn'>";
+        $out .= "<i class='ti ti-folder-open me-1'></i>" . __('Select file', 'gdrive') . "</button>";
+        $out .= "<span class='gdrive-result text-muted small' role='status' aria-live='polite'></span>";
 
         $out .= '</div>';
 
