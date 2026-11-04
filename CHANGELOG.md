@@ -1,5 +1,5 @@
 # GDrive - GLPI Plugin CHANGELOG
-## 4.0.0-beta.2 - 2026-11-04
+## 4.0.0 - 2026-11-04
 ### Added
 - GLPI 12 support
 - The configuration table is removed when the plugin is uninstalled
