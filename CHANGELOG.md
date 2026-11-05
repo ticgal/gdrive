@@ -1,4 +1,5 @@
 # GDrive - GLPI Plugin CHANGELOG
+
 ## 3.0.1 - 2026-10-21
 ### Security
 - The Google access token is no longer stored in a browser cookie. Closing the Google popup no longer reuses the token of a previous user of the same browser.
