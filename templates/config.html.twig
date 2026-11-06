@@ -24,11 +24,10 @@ along with Gdrive. If not, see <http://www.gnu.org/licenses/>.
 http://www.gnu.org/licenses/agpl-3.0-standalone.html
 @link      https://tic.gal
 @since     2018
----------------------------------------------------------------------- 
+----------------------------------------------------------------------
 -->
 
 {% import 'components/form/fields_macros.html.twig' as fields %}
-{% import 'components/form/buttons.html.twig' as buttons %}
 
 {% set no_header = no_header|default(not item.isNewItem() and not _get._in_modal|default(false)) %}
 {% set bg = '' %}
@@ -51,8 +50,11 @@ http://www.gnu.org/licenses/agpl-3.0-standalone.html
                         {{ fields.textField(
                         'developer_key',
                         item.fields['developer_key'],
-                        __('The Browser API key obtained from the Google API Console', 'gdrive'),
-                        options
+                        __('API key', 'gdrive'),
+                        options|merge({
+                            'add_field_html': '<div class="form-text">' ~ __('The Browser API key obtained from the Google API Console', 'gdrive')|e ~ '</div>',
+                            'placeholder': 'AIzaSy...'
+                        })
                         ) }}
                         {% endif %}
 
@@ -60,8 +62,11 @@ http://www.gnu.org/licenses/agpl-3.0-standalone.html
                         {{ fields.textField(
                         'client_id',
                         item.fields['client_id'],
-                        __('The Client ID obtained from the Google API Console', 'gdrive'),
-                        options
+                        __('Client ID', 'gdrive'),
+                        options|merge({
+                            'add_field_html': '<div class="form-text">' ~ __('The Client ID obtained from the Google API Console', 'gdrive')|e ~ '</div>',
+                            'placeholder': '1234567890-abcdef.apps.googleusercontent.com'
+                        })
                         ) }}
                         {% endif %}
 
@@ -69,8 +74,11 @@ http://www.gnu.org/licenses/agpl-3.0-standalone.html
                         {{ fields.textField(
                         'app_id',
                         item.fields['app_id'],
-                        __("See 'Project number' under 'IAM & Admin' > 'Settings'", 'gdrive'),
-                        options
+                        __('Project number', 'gdrive'),
+                        options|merge({
+                            'add_field_html': '<div class="form-text">' ~ __("See 'Project number' under 'IAM & Admin' > 'Settings'", 'gdrive')|e ~ '</div>',
+                            'placeholder': '1234567890'
+                        })
                         ) }}
                         {% endif %}
 

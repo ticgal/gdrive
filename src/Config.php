@@ -29,22 +29,34 @@
  * --------------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Gdrive;
+
+use CommonDBTM;
+use CommonGLPI;
+use DBConnection;
+use Glpi\Application\View\TemplateRenderer;
+use Migration;
+
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access this file directly");
 }
 
-use Glpi\Application\View\TemplateRenderer;
 
-class PluginGdriveConfig extends CommonDBTM
+class Config extends CommonDBTM
 {
-    public static $rightname = 'config';
-
-    // Install-time placeholders: the button stays hidden until they are replaced
-    public const DEFAULT_DEVELOPER_KEY = 'xxxxxxxYYYYYYYY-12345678';
-    public const DEFAULT_CLIENT_ID = '1234567890-abcdef.apps.googleusercontent.com';
-    public const DEFAULT_APP_ID = '1234567890';
+    public static string $rightname = 'config';
 
     private static $instance = null;
+
+    /**
+     * Same as the core Config: saving requires the user to re-authenticate
+     *
+     * @return bool
+     */
+    protected static function itemTypeRequiresReauthentication(): bool
+    {
+        return true;
+    }
 
     public static function getIcon()
     {
@@ -77,9 +89,9 @@ class PluginGdriveConfig extends CommonDBTM
      * getInstance
      *
      * @param  mixed $n
-     * @return PluginGdriveConfig
+     * @return Config
      */
-    public static function getInstance($n = 1): PluginGdriveConfig
+    public static function getInstance($n = 1): Config
     {
         if (!isset(self::$instance)) {
             self::$instance = new self();
@@ -93,72 +105,14 @@ class PluginGdriveConfig extends CommonDBTM
     /**
      * getConfig
      *
-     * @return PluginGdriveConfig
+     * @return Config
      */
-    public static function getConfig(): PluginGdriveConfig
+    public static function getConfig(): Config
     {
         $config = new self();
         $config->getFromDB(1);
 
         return $config;
-    }
-
-    /**
-     * isConfigured
-     *
-     * @return bool
-     */
-    public function isConfigured(): bool
-    {
-        return !in_array($this->fields['developer_key'] ?? '', ['', self::DEFAULT_DEVELOPER_KEY], true)
-            && !in_array($this->fields['client_id'] ?? '', ['', self::DEFAULT_CLIENT_ID], true)
-            && !in_array($this->fields['app_id'] ?? '', ['', self::DEFAULT_APP_ID], true);
-    }
-
-    /**
-     * prepareInputForUpdate
-     *
-     * Each value is printed into every page that shows the button, so it must have the
-     * shape Google gives it.
-     *
-     * @param  mixed $input
-     * @return array|false
-     */
-    public function prepareInputForUpdate($input)
-    {
-        $fields = [
-            'developer_key' => [
-                'pattern' => '/^[A-Za-z0-9_-]+$/',
-                'label'   => __('Browser API key', 'gdrive'),
-            ],
-            'client_id' => [
-                'pattern' => '/^[0-9]+-[A-Za-z0-9_-]+\.apps\.googleusercontent\.com$/',
-                'label'   => __('Client ID', 'gdrive'),
-            ],
-            'app_id' => [
-                'pattern' => '/^[0-9]+$/',
-                'label'   => __('Project number', 'gdrive'),
-            ],
-        ];
-
-        foreach ($fields as $field => $rule) {
-            if (!isset($input[$field])) {
-                continue;
-            }
-            if (is_string($input[$field])) {
-                $input[$field] = trim($input[$field]);
-            }
-            if (!is_string($input[$field]) || !preg_match($rule['pattern'], $input[$field])) {
-                Session::addMessageAfterRedirect(
-                    sprintf(__('Invalid value for %s', 'gdrive'), $rule['label']),
-                    false,
-                    ERROR
-                );
-                return false;
-            }
-        }
-
-        return $input;
     }
 
     /**
@@ -171,7 +125,7 @@ class PluginGdriveConfig extends CommonDBTM
     {
         $config = self::getInstance();
         $options = [
-            'full_width' => true
+            'full_width' => true,
         ];
 
         $templatePath = "@gdrive/config.html.twig";
@@ -186,7 +140,7 @@ class PluginGdriveConfig extends CommonDBTM
     /**
      * getTabNameForItem
      *
-     * @param  mixed $item
+     * @param  CommonGLPI $item
      * @param  mixed $withtemplate
      * @return string
      */
@@ -202,7 +156,7 @@ class PluginGdriveConfig extends CommonDBTM
     /**
      * displayTabContentForItem
      *
-     * @param  mixed $item
+     * @param  CommonGLPI $item
      * @param  mixed $tabnum
      * @param  mixed $withtemplate
      * @return bool
@@ -219,12 +173,12 @@ class PluginGdriveConfig extends CommonDBTM
     /**
      * install
      *
-     * @param  mixed $migration
+     * @param  Migration $migration
      * @return void
      */
     public static function install(Migration $migration): void
     {
-        /** @var \DBMysql $DB */
+        /** @var \DBmysql $DB */
         global $DB;
 
         $default_charset = DBConnection::getDefaultCharset();
@@ -234,15 +188,14 @@ class PluginGdriveConfig extends CommonDBTM
         $table = self::getTable();
         if (!$DB->tableExists($table)) {
             $migration->displayMessage("Installing $table");
-            // GLPI has no Migration::createTable(): the initial CREATE TABLE is raw DDL built only from constants
             $query = "CREATE TABLE IF NOT EXISTS `$table` (
                 `id` INT {$default_key_sign} NOT NULL AUTO_INCREMENT,
-                `developer_key` VARCHAR(250) NOT NULL DEFAULT {$DB->quoteValue(self::DEFAULT_DEVELOPER_KEY)},
-                `client_id` VARCHAR(250) NOT NULL DEFAULT {$DB->quoteValue(self::DEFAULT_CLIENT_ID)},
-                `app_id` VARCHAR(50) NOT NULL DEFAULT {$DB->quoteValue(self::DEFAULT_APP_ID)},
+                `developer_key` VARCHAR(250) NOT NULL DEFAULT 'xxxxxxxYYYYYYYY-12345678',
+                `client_id` VARCHAR(250) NOT NULL DEFAULT '1234567890-abcdef.apps.googleusercontent.com',
+                `app_id` VARCHAR(50) NOT NULL DEFAULT '1234567890',
                 PRIMARY KEY (`id`)
 			)ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
-            
+
             $DB->doQuery($query);
 
             // Default config
@@ -257,9 +210,9 @@ class PluginGdriveConfig extends CommonDBTM
      */
     public static function uninstall(): void
     {
-        /** @var \DBMysql $DB */
+        /** @var \DBmysql $DB */
         global $DB;
 
-        $DB->dropTable(self::getTable(), true);
+        $DB->doQuery("DROP TABLE IF EXISTS `" . self::getTable() . "`");
     }
 }

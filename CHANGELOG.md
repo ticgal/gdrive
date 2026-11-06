@@ -1,18 +1,24 @@
 # GDrive - GLPI Plugin CHANGELOG
-
-## 3.0.1 - 2026-10-21
-### Security
-- The Google access token is no longer stored in a browser cookie. Closing the Google popup no longer reuses the token of a previous user of the same browser.
-- Configuration values are encoded before they are written into the page, and saving rejects values that do not have the shape of a Google API key, client ID or project number.
+## 4.0.0 - 2026-11-04
 ### Added
-- "Attach files from Google Drive" right, in the GDrive tab of central profiles. Central profiles get it when the plugin is installed or updated. Self-service profiles no longer see the GDrive button.
+- GLPI 12 support
+- The configuration table is removed when the plugin is uninstalled
+- Google Docs, Sheets, Slides and Drawings can now be attached; they are exported as .docx, .xlsx, .pptx and .png
+
+### Changed
+- Requires GLPI 12.0.0 or later; GLPI 11 is no longer supported
+- The separate "Sign in with Google" button is removed; "Select file" now starts the Google sign-in directly
+- The GDrive button and the configuration form follow the native GLPI look, with shorter field labels
+
 ### Fixed
-- Uninstalling the plugin removes its configuration table and its right.
-- The button stays hidden until the install-time placeholders are replaced with a real configuration.
-- The Google scripts are loaded once per page, and the button no longer repeats element ids when several forms show it.
-- A failed download is now reported next to the button, including HTTP errors from Google, and the "no URL" alert is translated.
-- Google Docs, Sheets, Slides and Drawings are exported as DOCX, XLSX, PPTX and PDF. Before, Google's error message was attached instead of the file.
-- The plugin no longer loads its own copy of TinyMCE from a fixed path, which failed on instances served from a sub-path.
+- The error message is now shown when a file cannot be downloaded from Google Drive
+- Failed downloads are no longer uploaded as if they were the selected file
+- The status message is now shown next to the button that was used when there are several forms on the page
+
+### Security
+- Configuration values are escaped before being printed in the page
+- The Google access token is no longer stored in a cookie sent to the GLPI server
+- Saving the plugin configuration now requires re-entering the password, like the GLPI configuration
 
 ## 3.0.0 - 2026-02-04
 ## Added

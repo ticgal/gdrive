@@ -30,10 +30,12 @@
  */
 
 use Glpi\Plugin\Hooks;
+use GlpiPlugin\Gdrive\Config;
+use GlpiPlugin\Gdrive\Ticket;
 
-define('PLUGIN_GDRIVE_VERSION', '3.0.1');
-define("PLUGIN_GDRIVE_MIN_GLPI_VERSION", "11.0");
-define("PLUGIN_GDRIVE_MAX_GLPI_VERSION", "12.0");
+define('PLUGIN_GDRIVE_VERSION', '4.0.0');
+define("PLUGIN_GDRIVE_MIN_GLPI_VERSION", "12.0.0");
+define("PLUGIN_GDRIVE_MAX_GLPI_VERSION", "12.1.0");
 
 /**
  * plugin_version_gdrive
@@ -52,8 +54,8 @@ function plugin_version_gdrive(): array
             'glpi' => [
                 'min' => PLUGIN_GDRIVE_MIN_GLPI_VERSION,
                 'max' => PLUGIN_GDRIVE_MAX_GLPI_VERSION,
-            ]
-        ]
+            ],
+        ],
     ];
 }
 
@@ -67,14 +69,12 @@ function plugin_init_gdrive(): void
     /** @var array $PLUGIN_HOOKS */
     global $PLUGIN_HOOKS;
 
-    Plugin::registerClass(PluginGdriveProfile::class, ['addtabon' => 'Profile']);
-
     if (Session::haveRightsOr('config', [READ, UPDATE])) {
-        Plugin::registerClass(PluginGdriveConfig::class, ['addtabon' => 'Config']);
+        Plugin::registerClass(Config::class, ['addtabon' => 'Config']);
         $PLUGIN_HOOKS['config_page']['gdrive'] = 'front/config.form.php';
     }
 
-    $PLUGIN_HOOKS[Hooks::POST_ITEM_FORM]['gdrive'] = [PluginGdriveTicket::class, 'postForm'];
+    $PLUGIN_HOOKS[Hooks::POST_ITEM_FORM]['gdrive'] = [Ticket::class, 'postForm'];
 
-    $PLUGIN_HOOKS[Hooks::POST_SHOW_TAB]['gdrive'] = [PluginGdriveTicket::class, 'postTab'];
+    $PLUGIN_HOOKS[Hooks::POST_SHOW_TAB]['gdrive'] = [Ticket::class, 'postTab'];
 }

@@ -128,9 +128,6 @@ FILES_TO_DELETE=(
     "tools"
     "tests"
     "phpunit"
-    # internal process docs, not part of the shipped plugin
-    "CONTRIBUTING.md"
-    "GETTING_STARTED.md"
     # CI/CD config files
     ".php-cs-fixer.php"
     ".phpcs.xml"
