@@ -1,4 +1,13 @@
 # GDrive - GLPI Plugin CHANGELOG
+## 4.0.1-beta.1 - 2026-11-10
+### Fixed
+- Several GDrive buttons on the same page no longer share the same identifier
+- A configuration value with invalid characters no longer breaks the Select file button
+- Opening a tab that does not provide an item type no longer raises a PHP warning
+
+### Security
+- The Google access token is now kept only in the page memory and is no longer reused after closing the Google sign-in window
+
 ## 4.0.0 - 2026-11-04
 ### Added
 - GLPI 12 support

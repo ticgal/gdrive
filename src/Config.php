@@ -213,6 +213,6 @@ class Config extends CommonDBTM
         /** @var \DBmysql $DB */
         global $DB;
 
-        $DB->doQuery("DROP TABLE IF EXISTS `" . self::getTable() . "`");
+        $DB->dropTable(self::getTable(), true);
     }
 }

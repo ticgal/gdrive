@@ -94,7 +94,7 @@ final class Ticket
     public static function postTab($params): void
     {
         $item = $params['item'];
-        $itemtype = $params['options']['itemtype'];
+        $itemtype = $params['options']['itemtype'] ?? '';
         $config = Config::getConfig();
 
         switch ($item->getType()) {
@@ -115,12 +115,13 @@ final class Ticket
                 //case 'Cable':
             case 'Item_DeviceSimcard':
                 if ($itemtype == 'Document_Item') {
+                    // Unique id per render: several buttons can share a page
+                    $btn_id = 'gdrivebtn-' . bin2hex(random_bytes(4));
                     echo self::addGdriveScripts($config);
-                    echo self::addGdriveButton($config);
+                    echo self::addGdriveButton($config, $btn_id);
 
                     $out = '<script>
-                        var btnExist = $("#gdrivebtn");
-                        $(".firstbloc").append(btnExist);
+                        $(".firstbloc").append($("#' . $btn_id . '"));
                         </script>';
 
                     echo $out;
@@ -137,7 +138,7 @@ final class Ticket
      */
     private static function jsString($value): string
     {
-        return json_encode((string) $value, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE);
+        return json_encode((string) $value, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
     }
 
     /**
@@ -231,16 +232,14 @@ final class Ticket
 
                 function handleAuthResult(authResult) {
                     if (authResult && !authResult.error) {
+                        // The token only lives in page memory: it is never persisted, so
+                        // a reload or a new login always starts without one
                         access_token = authResult.access_token;
-                        try { sessionStorage.setItem('gdrive_access_token', access_token); } catch (e) {}
                         createPicker();
                     }else{
-                        if(authResult.error=='popup_closed_by_user'){
-                            try { access_token = sessionStorage.getItem('gdrive_access_token') || ''; } catch (e) { access_token = ''; }
-                            if (access_token) {
-                                createPicker();
-                            }
-                        }else{
+                        // Popup closed by the user: abort, never reuse a previous token
+                        access_token = '';
+                        if(authResult.error!='popup_closed_by_user'){
                             alert(authResult.error);
                         }
                     }
@@ -384,11 +383,15 @@ final class Ticket
      * addGdriveButton
      *
      * @param  Config $config
+     * @param  string $id Unique DOM id of the button container (generated when empty)
      * @return string
      */
-    public static function addGdriveButton(Config $config): string
+    public static function addGdriveButton(Config $config, string $id = ''): string
     {
-        $out = "<div class='gdrive-picker d-flex flex-wrap align-items-center gap-2 mb-2' id='gdrivebtn'>";
+        if ($id === '') {
+            $id = 'gdrivebtn-' . bin2hex(random_bytes(4));
+        }
+        $out = "<div class='gdrive-picker d-flex flex-wrap align-items-center gap-2 mb-2' id='" . htmlescape($id) . "'>";
 
         $out .= "<span class='d-inline-flex align-items-center text-muted'>
             <i class='" . self::getIcon() . " me-1'></i>" . self::getTypeName(2) . "</span>";
