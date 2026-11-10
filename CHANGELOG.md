@@ -1,5 +1,5 @@
 # GDrive - GLPI Plugin CHANGELOG
-## 4.0.1-beta.1 - 2026-11-10
+## 4.0. - 2026-11-10
 ### Fixed
 - Several GDrive buttons on the same page no longer share the same identifier
 - A configuration value with invalid characters no longer breaks the Select file button
